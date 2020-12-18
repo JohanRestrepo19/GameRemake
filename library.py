@@ -33,3 +33,9 @@ def crop_image(image_route, columns, rows):
         sprites_row = []
     
     return sprites_matrix
+
+def load_json(route):
+    with open(route) as content:
+        json_information = json.load(content)
+    content.close()
+    return json_information
