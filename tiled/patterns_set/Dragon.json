@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"..\/..\/resources\/images\/sprites\/Dragon.png",
+ "imageheight":384,
+ "imagewidth":432,
+ "margin":0,
+ "name":"Dragon",
+ "spacing":0,
+ "tilecount":12,
+ "tiledversion":"1.4.3",
+ "tileheight":96,
+ "tilewidth":144,
+ "type":"tileset",
+ "version":1.4
+}

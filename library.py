@@ -2,8 +2,10 @@ import pygame as pg
 import random
 import json
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 800 # 25 blocks
+HEIGHT = 600 # 18 blocks
+FPS = 60
+
 GREEN = [0,255,0]
 RED = [255,0,0]
 BLUE = [0,0,255]
@@ -39,3 +41,25 @@ def load_json(route):
         json_information = json.load(content)
     content.close()
     return json_information
+
+# dc: dictionary
+# ls: list
+def load_map(json_route):
+    #sprite groups
+    blocks = pg.sprite.Group()
+
+    #json information
+    map_information = load_json(json_route)
+    map_dc = map_information['layers'][0]
+    map_ls = map_dc['data']
+    row_limit = map_dc['height']
+    column_limit = map_dc['width']
+    block_counter = 0
+
+    for row in range(row_limit):
+        for column in range(column_limit):
+            if map_ls[block_counter] == 1:
+                pass
+            block_counter += 1
+    
+    return blocks

@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"..\/..\/resources\/images\/sprites\/Viper.png",
+ "imageheight":192,
+ "imagewidth":144,
+ "margin":0,
+ "name":"Viper",
+ "spacing":0,
+ "tilecount":12,
+ "tiledversion":"1.4.3",
+ "tileheight":48,
+ "tilewidth":48,
+ "type":"tileset",
+ "version":1.4
+}

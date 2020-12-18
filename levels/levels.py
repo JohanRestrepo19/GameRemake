@@ -43,7 +43,7 @@ def level01(screen, clock):
         '''screen updating'''
         
         pg.display.flip()
-        clock.tick(60)
+        clock.tick(FPS)
         '''---------------''' 
     
     return screen
@@ -87,7 +87,7 @@ def level02(screen, clock):
         '''screen updating'''
         
         pg.display.flip()
-        clock.tick(60)
+        clock.tick(FPS)
         '''---------------''' 
 
 
