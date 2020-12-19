@@ -2,6 +2,8 @@ import pygame as pg
 import random
 import json
 
+from classes import *
+
 WIDTH = 800 # 25 blocks
 HEIGHT = 600 # 18 blocks
 FPS = 60
@@ -58,8 +60,10 @@ def load_map(json_route):
 
     for row in range(row_limit):
         for column in range(column_limit):
+            position = [column*32, row*32]
             if map_ls[block_counter] == 1:
-                pass
+                block = LimiterBlock(position, 'resources/images/sprites/Blocks.png', [0,0])
+                blocks.add(block)
             block_counter += 1
     
     return blocks

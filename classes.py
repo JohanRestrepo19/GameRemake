@@ -10,8 +10,7 @@ class Taster(pg.sprite.Sprite):
         self.image.fill(color)
         self.direction = 0
         self.rect = self.image.get_rect()
-        self.rect.x = position[0]
-        self.rect.y = position[1]
+        self.rect.x, self.rect.y = position[0], position[1]
         self.velocity = 7
         self.velx = 0 
         self.vely = 0
@@ -50,3 +49,17 @@ class Taster(pg.sprite.Sprite):
         self.rect.x += self.velx
         self.rect.y += self.vely
 
+# mx = matrix
+class Block(pg.sprite.Sprite):
+    def __init__(self, position, sprite_route, sprite_position):
+        pg.sprite.Sprite.__init__(self)
+        self.sprite_mx = crop_image(sprite_route, 5, 1)
+        self.image = self.sprite_mx[sprite_position[0], sprite_position[1]]
+        self.rect.x, self.rect.y = position[0], position[1]
+
+    def update(self):
+        pass
+
+class LimiterBlock(Block):
+    def __init__(self, position, sprite_route, sprite_position):
+        Block.__init__(self, position, sprite_route, sprite_position)
