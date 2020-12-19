@@ -1,7 +1,9 @@
 import pygame as pg
 import random
 
-from library import * 
+import my_modules.classes as cls
+import my_modules.library as lib
+
 
 def level(screen, clock, map_json):
     '''flags'''
@@ -13,12 +15,12 @@ def level(screen, clock, map_json):
     '''-------------'''
 
     '''objects'''
-    taster = Taster([100,100], BLACK)
+    taster = cls.Taster([100,100], lib.BLACK)
     tasters.add(taster)
     '''-------'''
 
     '''map loading'''
-    blocks = load_map(map_json)
+    blocks = lib.load_map(map_json)
 
     while not end_game:
         '''Events management''' 
@@ -39,7 +41,7 @@ def level(screen, clock, map_json):
         '''---------------'''
 
         '''Groups drawing'''
-        screen.fill(WHITE)
+        screen.fill(lib.WHITE)
         tasters.draw(screen)
         blocks.draw(screen)
         '''--------------'''
@@ -47,7 +49,7 @@ def level(screen, clock, map_json):
         '''screen updating'''
         
         pg.display.flip()
-        clock.tick(FPS)
+        clock.tick(lib.FPS)
         '''---------------''' 
     
     return screen
@@ -55,11 +57,11 @@ def level(screen, clock, map_json):
 
 def main():
     pg.init()
-    screen = pg.display.set_mode([WIDTH, HEIGHT])
+    screen = pg.display.set_mode([lib.WIDTH, lib.HEIGHT])
     clock = pg.time.Clock()
 
     
-    #screen = level(screen, clock, 'tiled/level01.json')
+    screen = level(screen, clock, 'tiled/level01.json')
     
 
 

@@ -2,23 +2,23 @@ import pygame as pg
 import random
 import json
 
-from classes import *
+import my_modules.classes as cls
 
-WIDTH = 800 # 25 blocks
-HEIGHT = 600 # 18 blocks
+WIDTH = 800
+HEIGHT = 600
 FPS = 60
 
-GREEN = [0,255,0]
-RED = [255,0,0]
-BLUE = [0,0,255]
-YELLOW = [255,255,0]
-BLUE_2 = [0,255,255]
-BLACK = [0,0,0]
-WHITE = [255,255,255]
-GRAY = [180,180,180]
+GREEN = [0, 255, 0]
+RED = [255, 0, 0]
+BLUE = [0, 0, 255]
+YELLOW = [255, 255, 0]
+BLUE_2 = [0, 255, 255]
+BLACK = [0, 0, 0]
+WHITE = [255, 255, 255]
+GRAY = [180, 180, 180]
 
 def crop_image(image_route, columns, rows):
-    image = pg.image.load  (image_route)
+    image = pg.image.load(image_route)
     image_info = image.get_rect()
     image_width = image_info[2]
     image_height = image_info[3]
@@ -35,8 +35,9 @@ def crop_image(image_route, columns, rows):
             sprites_row.append(sprite)
         sprites_matrix.append(sprites_row)
         sprites_row = []
-    
+
     return sprites_matrix
+
 
 def load_json(route):
     with open(route) as content:
@@ -46,6 +47,8 @@ def load_json(route):
 
 # dc: dictionary
 # ls: list
+
+
 def load_map(json_route):
     #sprite groups
     blocks = pg.sprite.Group()
@@ -62,7 +65,7 @@ def load_map(json_route):
         for column in range(column_limit):
             position = [column*32, row*32]
             if map_ls[block_counter] == 1:
-                block = LimiterBlock(position, 'resources/images/sprites/Blocks.png', [0,0])
+                block = cls.LimiterBlock(position, 'resources/images/sprites/Blocks.jpg', [0,0])
                 blocks.add(block)
             block_counter += 1
     

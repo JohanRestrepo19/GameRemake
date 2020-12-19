@@ -1,23 +1,23 @@
 import pygame as pg
 import random
+import my_modules.library as library
 
-from library import *
 
 class Taster(pg.sprite.Sprite):
-    def __init__(self, position, color=WHITE):
+    def __init__(self, position, color):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface([50,50])
+        self.image = pg.Surface([50, 50])
         self.image.fill(color)
         self.direction = 0
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
         self.velocity = 7
-        self.velx = 0 
+        self.velx = 0
         self.vely = 0
         self.health = 200
         self.limit_blocks = None
     
-    def gravity(self, gravity_value = 1):
+    def gravity(self, gravity_value=1):
         pass
 
     def check_collision(self):
@@ -40,7 +40,7 @@ class Taster(pg.sprite.Sprite):
             self.direction = 3
             self.velx = 0
             self.vely = -self.velocity
-    
+  
     def stop(self):
         self.velx = 0
         self.vely = 0
@@ -53,9 +53,11 @@ class Taster(pg.sprite.Sprite):
 class Block(pg.sprite.Sprite):
     def __init__(self, position, sprite_route, sprite_position):
         pg.sprite.Sprite.__init__(self)
-        self.sprite_mx = crop_image(sprite_route, 5, 1)
-        self.image = self.sprite_mx[sprite_position[0], sprite_position[1]]
+        self.sprite_mx = library.crop_image(sprite_route, 5, 1)
+        self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]]
+        self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
+        
 
     def update(self):
         pass
