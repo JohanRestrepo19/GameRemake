@@ -73,6 +73,7 @@ class Spike(Block):
         self.damage = 1
 
 class Projectile(pg.sprite.Sprite):
+    damage = 10
     def __init__(self, position, direction, sprite_route = 'resources/images/sprites/IgneousBall.png'):
         pg.sprite.Sprite.__init__(self)
         self.sprite_mx = lib.crop_image(sprite_route, 4, 2)
@@ -84,7 +85,7 @@ class Projectile(pg.sprite.Sprite):
         self.rect.x, self.rect.y = position[0], position[1]
         self.velocity = 4
         self.velx, self.vely = 0, 0
-        self.damage = 10
+        self.damage = Projectile.damage
     
     def move(self):
         # if direction equals to 1 that means that projectile will head to left direction
@@ -106,4 +107,19 @@ class Projectile(pg.sprite.Sprite):
     def update(self):
         self.move()
         self.sprite_draw()
+
+class IgneousBall(Projectile):
+    damage = 20
+    def __init__(self, position, direction, sprite_route = 'resources/images/sprites/IgneousBall.png'):
+        Projectile.__init__(self, position, direction, sprite_route)
+        self.damage = IgneousBall.damage
+        print(self.damage)
+
+class EnemyIgneousBall(Projectile):
+    damage = 20
+    def __init__(self, position, direction, sprite_route = 'resources/images/sprites/DragonBreath.png'):
+        Projectile.__init__(self, position, direction, sprite_route)
+        self.damage = EnemyIgneousBall.damage
+        print(self.damage)
         
+    

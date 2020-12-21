@@ -19,8 +19,10 @@ def level(screen, clock, map_json):
     taster = cls.Taster([100,100], lib.BLACK)
     tasters.add(taster)
 
-    igneous_ball = cls.Projectile([lib.WIDTH // 2, lib.HEIGHT // 2], 1)
+    igneous_ball = cls.IgneousBall([lib.WIDTH // 2, lib.HEIGHT // 2], 1)
     projectiles.add(igneous_ball)
+    enemy_igneous_ball = cls.EnemyIgneousBall([lib.WIDTH // 2, lib.HEIGHT // 2], 2)
+    projectiles.add(enemy_igneous_ball)
     '''-------'''
 
     '''map loading'''
