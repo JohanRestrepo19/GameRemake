@@ -12,11 +12,15 @@ def level(screen, clock, map_json):
 
     '''Sprite groups'''
     tasters = pg.sprite.Group()
+    projectiles = pg.sprite.Group()
     '''-------------'''
 
     '''objects'''
     taster = cls.Taster([100,100], lib.BLACK)
     tasters.add(taster)
+
+    igneous_ball = cls.Projectile([lib.WIDTH // 2, lib.HEIGHT // 2], 1)
+    projectiles.add(igneous_ball)
     '''-------'''
 
     '''map loading'''
@@ -38,12 +42,14 @@ def level(screen, clock, map_json):
         '''Groups updating'''
         tasters.update()
         blocks.update()
+        projectiles.update()
         '''---------------'''
 
         '''Groups drawing'''
         screen.fill(lib.WHITE)
         tasters.draw(screen)
         blocks.draw(screen)
+        projectiles.draw(screen)
         '''--------------'''
 
         '''screen updating'''
