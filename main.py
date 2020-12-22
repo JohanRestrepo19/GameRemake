@@ -10,9 +10,13 @@ def level(screen, clock, map_json):
     end_game = False
     '''-----'''
 
+    '''map loading'''
+    blocks = lib.load_map(map_json)
+
     '''Sprite groups'''
     tasters = pg.sprite.Group()
     projectiles = pg.sprite.Group()
+    modifiers = pg.sprite.Group()
     '''-------------'''
 
     '''objects'''
@@ -23,10 +27,11 @@ def level(screen, clock, map_json):
     projectiles.add(igneous_ball)
     enemy_igneous_ball = cls.EnemyIgneousBall([lib.WIDTH // 2, lib.HEIGHT // 2], 2)
     projectiles.add(enemy_igneous_ball)
-    '''-------'''
 
-    '''map loading'''
-    blocks = lib.load_map(map_json)
+    health_modifier = cls.HealthModifier([250, 250], blocks)
+    damage_modifier = cls.IgneousBallModifier((290, 250), blocks)
+    modifiers.add(health_modifier, damage_modifier)
+    '''-------'''
 
     while not end_game:
         '''Events management''' 
@@ -45,6 +50,7 @@ def level(screen, clock, map_json):
         tasters.update()
         blocks.update()
         projectiles.update()
+        modifiers.update()
         '''---------------'''
 
         '''Groups drawing'''
@@ -52,6 +58,7 @@ def level(screen, clock, map_json):
         tasters.draw(screen)
         blocks.draw(screen)
         projectiles.draw(screen)
+        modifiers.draw(screen)
         '''--------------'''
 
         '''screen updating'''

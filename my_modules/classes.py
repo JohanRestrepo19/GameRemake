@@ -18,7 +18,11 @@ class Taster(pg.sprite.Sprite):
         self.limit_blocks = None
     
     def gravity(self, gravity_value=1):
-        pass
+        if self.rect.bottom >= lib.HEIGHT: # and self.vely > 0:
+            self.vely = 0
+            self.rect.bottom = lib.HEIGHT
+        else:
+            self.vely += gravity_value
 
     def check_collision(self):
         pass
@@ -42,13 +46,14 @@ class Taster(pg.sprite.Sprite):
             self.vely = -self.velocity
   
     def stop(self):
-        self.velx = 0
-        self.vely = 0
+        self.velx, self.vely = 0, 0
 
     def update(self):
         self.rect.x += self.velx
         self.rect.y += self.vely
+        
 
+#ls = list
 # mx = matrix
 class Block(pg.sprite.Sprite):
     def __init__(self, position, sprite_route, sprite_position):
@@ -122,4 +127,44 @@ class EnemyIgneousBall(Projectile):
         self.damage = EnemyIgneousBall.damage
         print(self.damage)
         
+class Modifier(pg.sprite.Sprite):
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0,0]):
+        pg.sprite.Sprite.__init__(self)
+        self.sprite_mx = lib.crop_image(sprite_route, col, row)
+        self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]]
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = position[0], position[1]
+        self.vely = 0.1
+        self.limit_blocks = limit_blocks
+
+    def gravity(self, gravity_value = lib.GRAVITY):
+        if self.vely != 0:
+            self.vely += gravity_value
+
+    def check_collision(self):
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
+        
+        for block in collision_ls:
+            if self.rect.bottom >= block.rect.top:
+                self.rect.bottom = block.rect.top
+                self.vely = 0
     
+    def move(self):
+        self.rect.y += self.vely
+        
+    def update(self):
+        self.gravity()
+        self.check_collision()
+        self.move()
+
+class HealthModifier(Modifier):
+    life_increase = 249
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0, 0]):        
+        Modifier.__init__(self,position, limit_blocks, sprite_route, col, row, sprite_position)
+
+class IgneousBallModifier(Modifier):
+    damage_increase = 20
+    change_appearance = 'resources/images/sprites/DragonBreath.png'
+
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [2, 5]):        
+        Modifier.__init__(self,position, limit_blocks, sprite_route, col, row, sprite_position)

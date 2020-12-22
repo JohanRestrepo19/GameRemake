@@ -7,6 +7,7 @@ import my_modules.classes as cls
 WIDTH = 800
 HEIGHT = 600
 FPS = 60
+GRAVITY = 0.5
 
 GREEN = [0, 255, 0]
 RED = [255, 0, 0]
