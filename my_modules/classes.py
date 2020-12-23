@@ -17,15 +17,14 @@ class Taster(pg.sprite.Sprite):
         self.health = 200
         self.limit_blocks =  limit_blocks
     
-    def gravity(self, gravity_value=1):
-        if self.rect.bottom >= lib.HEIGHT: # and self.vely > 0:
-            self.vely = 0
-            self.rect.bottom = lib.HEIGHT
-        else:
+    def gravity(self, gravity_value = lib.GRAVITY):
+        if self.vely != 0:
             self.vely += gravity_value
 
     def check_collision(self):
-        pass
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False):
+        for block in collision_ls:
+            if self.rect.top 
 
     def move(self, key):
         if key == pg.K_DOWN:
@@ -43,12 +42,13 @@ class Taster(pg.sprite.Sprite):
         if key == pg.K_UP:
             self.direction = 3
             self.velx = 0
-            self.vely = -self.velocity
+            self.vely = -self.velocity * 2
   
     def stop(self):
         self.velx, self.vely = 0, 0
 
     def update(self):
+        self.gravity()
         self.rect.x += self.velx
         self.rect.y += self.vely
         
