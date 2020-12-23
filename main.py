@@ -20,7 +20,7 @@ def level(screen, clock, map_json):
     '''-------------'''
 
     '''objects'''
-    taster = cls.Taster([100,100], lib.BLACK)
+    taster = cls.Taster([100,100], blocks)
     tasters.add(taster)
 
     igneous_ball = cls.IgneousBall([lib.WIDTH // 2, lib.HEIGHT // 2], 1)

@@ -4,7 +4,7 @@ import my_modules.library as lib
 
 
 class Taster(pg.sprite.Sprite):
-    def __init__(self, position, color):
+    def __init__(self, position, limit_blocks = None, color = lib.BLACK):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface([50, 50])
         self.image.fill(color)
@@ -15,7 +15,7 @@ class Taster(pg.sprite.Sprite):
         self.velx = 0
         self.vely = 0
         self.health = 200
-        self.limit_blocks = None
+        self.limit_blocks =  limit_blocks
     
     def gravity(self, gravity_value=1):
         if self.rect.bottom >= lib.HEIGHT: # and self.vely > 0:
@@ -160,11 +160,50 @@ class Modifier(pg.sprite.Sprite):
 class HealthModifier(Modifier):
     life_increase = 249
     def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0, 0]):        
-        Modifier.__init__(self,position, limit_blocks, sprite_route, col, row, sprite_position)
+        Modifier.__init__(self, position, limit_blocks, sprite_route, col, row, sprite_position)
 
 class IgneousBallModifier(Modifier):
     damage_increase = 20
     change_appearance = 'resources/images/sprites/DragonBreath.png'
 
     def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [2, 5]):        
-        Modifier.__init__(self,position, limit_blocks, sprite_route, col, row, sprite_position)
+        Modifier.__init__(self, position, limit_blocks, sprite_route, col, row, sprite_position)
+
+class Character(pg.sprite.Sprite):
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/BlackOccultist.png', col = 3, row = 4):
+        pg.sprite.Sprite.__init__(self)
+        self.sprite_mx = lib.crop_image(sprite_route, col, row)
+        self.direction = 0
+        self.sprite_counter = 0
+        self.image = self.sprite_mx[self.direction][self.sprite_counter]
+        self.rect = self.image.get_rect()
+        self.rect.x, self.rect.y = position[0], position[1]
+        self.limit_blocks = limit_blocks
+        #Movement counter is used to define the behavior of some enemies
+        self.movement_counter = 60   
+        self.movement_counter_limit = 60
+        self.velocity = 5
+        self.velx, self.vely = self.velocity, 0.1
+        self.health = 200
+        self.collision_damage = 1
+        self.reward_score = 10
+        self.death_sound = None
+        self.damage_sound = None
+
+    def gravity(self, gravity_value = lib.GRAVITY):
+        if self.vely != 0: 
+            self.vely += gravity_value
+
+    def check_collision(self):
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
+        pass
+
+    def sprite_animation(self):
+        pass
+
+    def move(self):
+        pass
+
+    
+    def update(self):
+        pass
