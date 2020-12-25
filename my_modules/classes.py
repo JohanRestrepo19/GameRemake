@@ -12,46 +12,60 @@ class Taster(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
         self.velocity = 7
-        self.velx = 0
-        self.vely = 0
+        self.velx, self.vely = 0, 0
         self.health = 200
-        self.limit_blocks =  limit_blocks
-    
+        self.limit_blocks = limit_blocks
+        self.on_ground = False
+
     def gravity(self, gravity_value = lib.GRAVITY):
-        if self.vely != 0:
+        if not self.on_ground:
             self.vely += gravity_value
 
-    def check_collision(self):
-        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False):
-        for block in collision_ls:
-            if self.rect.top 
-
-    def move(self, key):
-        if key == pg.K_DOWN:
-            self.direction = 0
-            self.velx = 0
-            self.vely = self.velocity
-        if key == pg.K_LEFT:
-            self.direction = 1
+    def move(self):
+        keys = pg.key.get_pressed()
+        
+        if keys[pg.K_LEFT]:
             self.velx = -self.velocity
-            self.vely = 0
-        if key == pg.K_RIGHT:
-            self.direction = 2
+        if keys[pg.K_RIGHT]:
             self.velx = self.velocity
-            self.vely = 0
-        if key == pg.K_UP:
-            self.direction = 3
-            self.velx = 0
-            self.vely = -self.velocity * 2
-  
-    def stop(self):
-        self.velx, self.vely = 0, 0
+        if keys[pg.K_UP] and self.on_ground:
+            self.vely = -12
+        if keys[pg.K_DOWN]:
+            self.vely = self.velocity
+
 
     def update(self):
+        self.velx = 0
         self.gravity()
+        self.move()
+
         self.rect.x += self.velx
+        #Check collision on the x-axis
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
+        for block in collision_ls:
+            if (self.rect.right >= block.rect.left) and (self.velx > 0):
+                self.rect.right = block.rect.left
+                self.velx = 0
+            
+            if self.rect.left <= block.rect.right and (self.velx < 0):
+                self.rect.left = block.rect.right
+                self.velx = 0
+                
         self.rect.y += self.vely
+        # Check collision on the y-axis
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
+        if collision_ls:
+            self.on_ground = True
+        else: self.on_ground = False
+        for block in collision_ls:
+            if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
+                self.rect.bottom = block.rect.top
+            
+            if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
+                self.rect.top = block.rect.bottom
+                self.on_ground = False
         
+
 
 #ls = list
 # mx = matrix
@@ -59,10 +73,10 @@ class Block(pg.sprite.Sprite):
     def __init__(self, position, sprite_route, sprite_position):
         pg.sprite.Sprite.__init__(self)
         self.sprite_mx = lib.crop_image(sprite_route, 5, 1)
-        self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]]
+        self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]].convert()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
-        
+
     def update(self):
         pass
 
@@ -91,13 +105,13 @@ class Projectile(pg.sprite.Sprite):
         self.velocity = 4
         self.velx, self.vely = 0, 0
         self.damage = Projectile.damage
-    
+
     def move(self):
         # if direction equals to 1 that means that projectile will head to left direction
         if self.direction == 1:
             self.velx = -self.velocity
             self.sprite_direction = 1
-        
+
         # if direction equals to 2 that means that projectile will head to right direction
         if self.direction == 2:
             self.velx = self.velocity
@@ -126,7 +140,7 @@ class EnemyIgneousBall(Projectile):
         Projectile.__init__(self, position, direction, sprite_route)
         self.damage = EnemyIgneousBall.damage
         print(self.damage)
-        
+
 class Modifier(pg.sprite.Sprite):
     def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0,0]):
         pg.sprite.Sprite.__init__(self)
@@ -143,15 +157,15 @@ class Modifier(pg.sprite.Sprite):
 
     def check_collision(self):
         collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
-        
+
         for block in collision_ls:
             if self.rect.bottom >= block.rect.top:
                 self.rect.bottom = block.rect.top
                 self.vely = 0
-    
+
     def move(self):
         self.rect.y += self.vely
-        
+
     def update(self):
         self.gravity()
         self.check_collision()

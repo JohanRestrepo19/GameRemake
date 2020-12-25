@@ -4,81 +4,73 @@ import random
 import my_modules.classes as cls
 import my_modules.library as lib
 
+class Game:
+    def __init__(self):
+        # Initialize game window, etc
+        pg.init()
+        pg.mixer.init()
+        self.screen = pg.display.set_mode((lib.WIDTH, lib.HEIGHT))
+        self.clock = pg.time.Clock()
+        self.running = True
 
-def level(screen, clock, map_json):
-    '''flags'''
-    end_game = False
-    '''-----'''
+    def new(self):
+        # start a new game
+        self.all_sprites = pg.sprite.Group()
+        self.blocks = lib.load_map('tiled/level01.json')
 
-    '''map loading'''
-    blocks = lib.load_map(map_json)
+        self.player = cls.Taster((0, 0), self.blocks, lib.GREEN)
+        self.modifier = cls.Modifier((150, 150), self.blocks)
+        self.all_sprites.add(self.player, self.modifier)
 
-    '''Sprite groups'''
-    tasters = pg.sprite.Group()
-    projectiles = pg.sprite.Group()
-    modifiers = pg.sprite.Group()
-    '''-------------'''
+        
+        self.run()
 
-    '''objects'''
-    taster = cls.Taster([100,100], blocks)
-    tasters.add(taster)
+    def run(self):
+        # Game loop
+        self.playing = True
+        while self.playing:
+            self.clock.tick(lib.FPS)
+            self.events()
+            self.update()
+            self.draw()
 
-    igneous_ball = cls.IgneousBall([lib.WIDTH // 2, lib.HEIGHT // 2], 1)
-    projectiles.add(igneous_ball)
-    enemy_igneous_ball = cls.EnemyIgneousBall([lib.WIDTH // 2, lib.HEIGHT // 2], 2)
-    projectiles.add(enemy_igneous_ball)
-
-    health_modifier = cls.HealthModifier([250, 250], blocks)
-    damage_modifier = cls.IgneousBallModifier((290, 250), blocks)
-    modifiers.add(health_modifier, damage_modifier)
-    '''-------'''
-
-    while not end_game:
-        '''Events management''' 
+    def events(self):
+        # Game loop - events
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                end_game = True
-            if event.type == pg.KEYDOWN:
-                taster.move(event.key)
-                if event.key == pg.K_SPACE:
-                    end_game = True
-            if event.type == pg.KEYUP:
-                taster.stop()
-                
-        
-        '''Groups updating'''
-        tasters.update()
-        blocks.update()
-        projectiles.update()
-        modifiers.update()
-        '''---------------'''
+                if self.playing:
+                    self.playing = False
+                self.running = False
 
-        '''Groups drawing'''
-        screen.fill(lib.WHITE)
-        tasters.draw(screen)
-        blocks.draw(screen)
-        projectiles.draw(screen)
-        modifiers.draw(screen)
-        '''--------------'''
+    def update(self):
+        # Game loop - update
+        self.all_sprites.update()
+        self.blocks.update()
 
-        '''screen updating'''
-        
+
+    def draw(self):
+        # Game loop - draw
+        self.screen.fill(lib.WHITE)
+        self.all_sprites.draw(self.screen)
+        self.blocks.draw(self.screen)
         pg.display.flip()
-        clock.tick(lib.FPS)
-        '''---------------''' 
-    
-    return screen
 
+    def show_start_screen(self):
+        pass
+
+    def show_game_over_screen(self):
+        pass
 
 def main():
-    pg.init()
-    screen = pg.display.set_mode([lib.WIDTH, lib.HEIGHT])
-    clock = pg.time.Clock()
+    game = Game()
+    game.show_start_screen()
 
-    
-    screen = level(screen, clock, 'tiled/level01.json')
-    
+    while game.running:
+        game.new()
 
+        game.show_game_over_screen()
+
+    pg.quit()
 
 if __name__ == "__main__":
     main()
