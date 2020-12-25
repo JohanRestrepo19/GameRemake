@@ -9,14 +9,14 @@ HEIGHT = 600
 FPS = 60
 GRAVITY = 0.5
 
-GREEN = [0, 255, 0]
-RED = [255, 0, 0]
-BLUE = [0, 0, 255]
-YELLOW = [255, 255, 0]
-BLUE_2 = [0, 255, 255]
-BLACK = [0, 0, 0]
-WHITE = [255, 255, 255]
-GRAY = [180, 180, 180]
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+BLUE_2 = (0, 255, 255)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (180, 180, 180)
 
 def crop_image(image_route, columns, rows):
     image = pg.image.load(image_route)
