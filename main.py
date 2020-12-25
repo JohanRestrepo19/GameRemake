@@ -20,19 +20,21 @@ class Game:
 
         self.player = cls.Taster((0, 0), self.blocks, lib.GREEN)
         self.modifier = cls.Modifier((150, 150), self.blocks)
+        self.character = cls.Character((400, 100), self.blocks)
         self.all_sprites.add(self.player, self.modifier)
+        self.all_sprites.add(self.character)
 
-        
+
         self.run()
 
     def run(self):
         # Game loop
         self.playing = True
         while self.playing:
-            self.clock.tick(lib.FPS)
             self.events()
             self.update()
             self.draw()
+            self.clock.tick(lib.FPS)
 
     def events(self):
         # Game loop - events

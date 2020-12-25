@@ -69,5 +69,5 @@ def load_map(json_route):
                 block = cls.LimiterBlock(position, 'resources/images/sprites/Blocks.jpg', [0,0])
                 blocks.add(block)
             block_counter += 1
-    
+
     return blocks

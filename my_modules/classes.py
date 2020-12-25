@@ -23,7 +23,7 @@ class Taster(pg.sprite.Sprite):
 
     def move(self):
         keys = pg.key.get_pressed()
-        
+
         if keys[pg.K_LEFT]:
             self.velx = -self.velocity
         if keys[pg.K_RIGHT]:
@@ -46,25 +46,26 @@ class Taster(pg.sprite.Sprite):
             if (self.rect.right >= block.rect.left) and (self.velx > 0):
                 self.rect.right = block.rect.left
                 self.velx = 0
-            
+
             if self.rect.left <= block.rect.right and (self.velx < 0):
                 self.rect.left = block.rect.right
                 self.velx = 0
-                
+
         self.rect.y += self.vely
         # Check collision on the y-axis
         collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
         if collision_ls:
             self.on_ground = True
-        else: self.on_ground = False
+        else:
+            self.on_ground = False
         for block in collision_ls:
             if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
                 self.rect.bottom = block.rect.top
-            
+
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
                 self.on_ground = False
-        
+
 
 
 #ls = list
@@ -173,14 +174,14 @@ class Modifier(pg.sprite.Sprite):
 
 class HealthModifier(Modifier):
     life_increase = 249
-    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0, 0]):        
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0, 0]):
         Modifier.__init__(self, position, limit_blocks, sprite_route, col, row, sprite_position)
 
 class IgneousBallModifier(Modifier):
     damage_increase = 20
     change_appearance = 'resources/images/sprites/DragonBreath.png'
 
-    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [2, 5]):        
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [2, 5]):
         Modifier.__init__(self, position, limit_blocks, sprite_route, col, row, sprite_position)
 
 class Character(pg.sprite.Sprite):
@@ -194,30 +195,78 @@ class Character(pg.sprite.Sprite):
         self.rect.x, self.rect.y = position[0], position[1]
         self.limit_blocks = limit_blocks
         #Movement counter is used to define the behavior of some enemies
-        self.movement_counter = 60   
-        self.movement_counter_limit = 60
-        self.velocity = 5
-        self.velx, self.vely = self.velocity, 0.1
+        self.movement_counter = 60
+        self.movement_counter_limit = lib.FPS
+        self.velocity = 2
+        self.velx, self.vely = 0, 0
         self.health = 200
         self.collision_damage = 1
         self.reward_score = 10
         self.death_sound = None
         self.damage_sound = None
+        self.on_ground = False
 
     def gravity(self, gravity_value = lib.GRAVITY):
-        if self.vely != 0: 
+        if not self.on_ground:
             self.vely += gravity_value
 
-    def check_collision(self):
-        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
-        pass
+    def move(self):
+        if self.movement_counter > self.movement_counter_limit:
+            self.direction = random.randint(1, 2)
+
+            # move to the left direction
+            if self.direction == 1:
+                self.velx = -self.velocity
+            # move to the right direction
+            if self.direction == 2:
+                self.velx = self.velocity
+
+            self.movement_counter = 0
+        else:
+            self.movement_counter += 1
 
     def sprite_animation(self):
-        pass
+        if self.velx != 0:
+            if self.sprite_counter < lib.FPS:
+                self.sprite_counter += 1
+            else:
+                self.sprite_counter = 0
 
-    def move(self):
-        pass
+            sprite_divider = (lib.FPS // len(self.sprite_mx[self.direction])) + 1
+            self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
 
-    
     def update(self):
-        pass
+        self.gravity()
+        self.move()
+        self.sprite_animation()
+
+        self.rect.x += self.velx
+        # Check collision on the x-axis
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
+        for block in collision_ls:
+            # Check collision with blocks to the right of the character
+            if (self.rect.right >= block.rect.left) and (self.velx > 0):
+                self.rect.right = block.rect.left
+                self.velx = 0
+            # Check collision with blocks to the left of the character
+            if (self.rect.left <= block.rect.right) and (self.velx < 0):
+                self.rect.left = block.rect.right
+                self.velx = 0
+
+        self.rect.y += self.vely
+        # Check collision on the y-axis
+        collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
+        if collision_ls:
+            self.on_ground = True
+        else:
+            self.on_ground = False
+
+        for block in collision_ls:
+            # Check collision with blocks below the character
+            if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
+                self.rect.bottom = block.rect.top
+
+            #Check collision with block above the character
+            if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
+                self.rect.top = block.rect.bottom
+                self.on_ground = False
