@@ -18,11 +18,17 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.blocks = lib.load_map('tiled/level01.json')
 
-        self.player = cls.Taster((0, 0), self.blocks, lib.GREEN)
+        self.player = cls.Taster((300, 0), self.blocks, lib.GREEN)
         self.modifier = cls.Modifier((150, 150), self.blocks)
-        self.character = cls.Character((400, 100), self.blocks)
         self.all_sprites.add(self.player, self.modifier)
-        self.all_sprites.add(self.character)
+
+        n = 10
+
+        for i in range(n):
+            position = (400, 0)
+            self.character = cls.Character(position, self.blocks)
+            self.all_sprites.add(self.character)
+
 
 
         self.run()

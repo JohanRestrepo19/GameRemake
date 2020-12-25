@@ -52,15 +52,20 @@ class Taster(pg.sprite.Sprite):
                 self.velx = 0
 
         self.rect.y += self.vely
+
         # Check collision on the y-axis
         collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
-        if collision_ls:
-            self.on_ground = True
-        else:
+
+        # if there is not collision with any block below then self.on_ground
+        # must be False because the character is not on the floor
+        if not collision_ls:
             self.on_ground = False
+
         for block in collision_ls:
             if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
                 self.rect.bottom = block.rect.top
+                self.on_ground = True
+                self.vely = 0
 
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
@@ -232,6 +237,8 @@ class Character(pg.sprite.Sprite):
             else:
                 self.sprite_counter = 0
 
+            # sprite_divider is the number which is used to divide the counter of the sprites
+            # in base of the FPS
             sprite_divider = (lib.FPS // len(self.sprite_mx[self.direction])) + 1
             self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
 
@@ -254,17 +261,21 @@ class Character(pg.sprite.Sprite):
                 self.velx = 0
 
         self.rect.y += self.vely
+
         # Check collision on the y-axis
         collision_ls = pg.sprite.spritecollide(self, self.limit_blocks, False)
-        if collision_ls:
-            self.on_ground = True
-        else:
+
+        # if there is not collision with any block below then self.on_ground
+        # must be False because the character is not on the floor
+        if not collision_ls:
             self.on_ground = False
 
         for block in collision_ls:
             # Check collision with blocks below the character
             if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
                 self.rect.bottom = block.rect.top
+                self.on_ground = True
+                self.vely = 0
 
             #Check collision with block above the character
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
