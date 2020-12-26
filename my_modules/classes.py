@@ -281,3 +281,25 @@ class Character(pg.sprite.Sprite):
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
                 self.on_ground = False
+
+class Player(Character):
+    def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Player.png', col = 3, row = 2):
+        Character.__init__(self, position, limit_blocks, sprite_route, col, row)
+        self.velocity = 7
+
+    def move(self):
+        keys = pg.key.get_pressed()
+
+        if keys[pg.K_a]:
+            self.velx = -self.velocity
+            self.direction = 0
+        if keys[pg.K_d]:
+            self.velx = self.velocity
+            self.direction = 1
+        if keys[pg.K_w] and self.on_ground:
+            self.vely = -12
+
+    def update(self):
+        self.velx = 0
+        self.move()
+        Character.update(self)
