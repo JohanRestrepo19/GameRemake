@@ -228,7 +228,8 @@ class Character(pg.sprite.Sprite):
 
             self.movement_counter = 0
         else:
-            self.movement_counter += 1
+            # self.movement_counter increases with the len of the actions list that the character is currently doing
+            self.movement_counter += len(self.sprite_mx[self.direction])
 
     def sprite_animation(self):
         if self.velx != 0:
@@ -239,6 +240,7 @@ class Character(pg.sprite.Sprite):
 
             # sprite_divider is the number which is used to divide the counter of the sprites
             # in base of the FPS
+
             sprite_divider = (lib.FPS // len(self.sprite_mx[self.direction])) + 1
             self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
 
@@ -285,7 +287,11 @@ class Character(pg.sprite.Sprite):
 class Player(Character):
     def __init__(self, position, limit_blocks = None, sprite_route = 'resources/images/sprites/Player.png', col = 3, row = 2):
         Character.__init__(self, position, limit_blocks, sprite_route, col, row)
-        self.velocity = 7
+        self.velocity = 5
+        self.score = 0
+        self.shot = True
+        self.shot_counter = lib.FPS
+        self.cool_down_shot = lib.FPS
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -298,6 +304,12 @@ class Player(Character):
             self.direction = 1
         if keys[pg.K_w] and self.on_ground:
             self.vely = -12
+
+    def shoot(self):
+        if self.shot_counter > self.cool_down_shot:
+            pass
+
+
 
     def update(self):
         self.velx = 0
