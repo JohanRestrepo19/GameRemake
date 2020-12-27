@@ -289,7 +289,6 @@ class Player(Character):
         Character.__init__(self, position, limit_blocks, sprite_route, col, row)
         self.velocity = 5
         self.score = 0
-        self.shot = True
         self.shot_counter = lib.FPS
         self.cool_down_shot = lib.FPS
 
@@ -307,7 +306,12 @@ class Player(Character):
 
     def shoot(self):
         if self.shot_counter > self.cool_down_shot:
-            pass
+            self.shot_counter = 0
+            return True
+        else:
+            self.shot_counter += 1
+            return False
+
 
 
 
