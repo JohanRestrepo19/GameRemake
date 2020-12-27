@@ -15,23 +15,25 @@ class Game:
 
     def new(self):
         # start a new game
-        self.all_sprites = pg.sprite.Group()
+        '''Creation of all groups'''
+        # Must be replaced by load_map function
+        self.all_entities = pg.sprite.Group()
         self.blocks = lib.load_map('tiled/level01.json')
+        self.modifiers = pg.sprite.Group()
+        self.projectiles = pg.sprite.Group()
 
-        self.taster = cls.Taster((300, 0), self.blocks, lib.GREEN)
-        self.modifier = cls.Modifier((150, 150), self.blocks)
-        self.player = cls.Player((300, 0), self.blocks)
-        self.all_sprites.add(self.player, self.taster, self.modifier)
+        self.taster = cls.Taster((300, 0), self, lib.GREEN)
+        self.modifier = cls.Modifier((150, 150), self)
+        self.player = cls.Player((300, 0), self)
+        self.all_entities.add(self.player, self.taster, self.modifier)
 
 
         n = 10
 
         for i in range(n):
             position = (400, 0)
-            self.character = cls.Character(position, self.blocks)
-            self.all_sprites.add(self.character)
-
-
+            self.character = cls.Character(position, self)
+            self.all_entities.add(self.character)
 
         self.run()
 
@@ -51,18 +53,26 @@ class Game:
                 if self.playing:
                     self.playing = False
                 self.running = False
+            if event.type == pg.KEYDOWN and event.key == pg.K_F1:
+                if self.playing:
+                    self.playing = False
+                self.running = False
 
     def update(self):
         # Game loop - update
-        self.all_sprites.update()
+        self.all_entities.update()
+        self.modifiers.update()
+        self.projectiles.update()
         self.blocks.update()
 
 
     def draw(self):
         # Game loop - draw
         self.screen.fill(lib.WHITE)
-        self.all_sprites.draw(self.screen)
+        self.all_entities.draw(self.screen)
         self.blocks.draw(self.screen)
+        self.modifiers.draw(self.screen)
+        self.projectiles.draw(self.screen)
         pg.display.flip()
 
     def show_start_screen(self):
