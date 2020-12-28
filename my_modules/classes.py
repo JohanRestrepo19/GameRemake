@@ -98,12 +98,13 @@ class Spike(Block):
 
 class Projectile(pg.sprite.Sprite):
     damage = 10
-    def __init__(self, position, direction, sprite_route = 'resources/images/sprites/IgneousBall.png'):
+    def __init__(self, position, direction, game, sprite_route = 'resources/images/sprites/IgneousBall.png'):
         pg.sprite.Sprite.__init__(self)
         self.sprite_mx = lib.crop_image(sprite_route, 4, 2)
         self.sprite_size = 1
         self.direction = direction
         self.sprite_direction = 0
+        self.game = game
         self.image = self.sprite_mx[self.sprite_size][self.sprite_direction]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
@@ -132,17 +133,29 @@ class Projectile(pg.sprite.Sprite):
         self.move()
         self.sprite_draw()
 
+        '''Blocks collision'''
+        # Check if projectile collides with any block and then kills it
+        collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
+        if collision_ls:            
+            self.kill()
+
+        '''Projectile out of screen'''
+        # Since the projectile only moves in the x-axis then only that direction is checked
+        if (self.rect.x > lib.WIDTH) or (self.rect.x < 0):
+            self.kill()
+            print(f'Igneous balls on screen {len(self.game.projectiles)}')
+
 class IgneousBall(Projectile):
     damage = 20
-    def __init__(self, position, direction, sprite_route = 'resources/images/sprites/IgneousBall.png'):
-        Projectile.__init__(self, position, direction, sprite_route)
+    def __init__(self, position, direction, game,sprite_route = 'resources/images/sprites/IgneousBall.png'):
+        Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = IgneousBall.damage
-        print(self.damage)
+        #print(f"Igneous ball's damage{self.damage}")
 
 class EnemyIgneousBall(Projectile):
     damage = 20
-    def __init__(self, position, direction, sprite_route = 'resources/images/sprites/DragonBreath.png'):
-        Projectile.__init__(self, position, direction, sprite_route)
+    def __init__(self, position, direction, game, sprite_route = 'resources/images/sprites/DragonBreath.png'):
+        Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = EnemyIgneousBall.damage
         print(self.damage)
 
@@ -290,7 +303,7 @@ class Player(Character):
         self.velocity = 5
         self.score = 0
         self.shot_counter = lib.FPS
-        self.cool_down_shot = lib.FPS
+        self.cool_down_shot = lib.FPS // 2
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -305,14 +318,30 @@ class Player(Character):
             self.vely = -12
 
     def shoot(self):
-        if self.shot_counter > self.cool_down_shot:
+        keys = pg.key.get_pressed()
+        if (self.shot_counter > self.cool_down_shot) and keys[pg.K_SPACE]:
             self.shot_counter = 0
-            return True
+            position = (self.rect.x, self.rect.y)
+            #Check the direction the player is heading
+            if self.direction == 0:                #
+                # Direction 0 means the player is moving to the left 
+                # and the left direction of the igneous ball is 1
+                direction = 1
+            if self.direction == 1:
+                # Direction 1 means the player is moving to the right
+                # and the right direction of the igneous ball is 2
+                direction = 2
+
+            new_igneous_ball = IgneousBall(position, direction, self.game)
+            self.game.projectiles.add(new_igneous_ball)
+            print(f'Number of igneous balls on screen {len(self.game.projectiles)}')
         else:
-            self.shot_counter += 1
-            return False
+            self.shot_counter += 1 
+            
 
     def update(self):
         self.velx = 0
         self.move()
         Character.update(self)
+        self.shoot()
+        

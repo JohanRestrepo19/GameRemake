@@ -17,6 +17,8 @@ BLUE_2 = (0, 255, 255)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (180, 180, 180)
+CYAN = (0, 176, 246)
+BG_COLOR = CYAN
 
 def crop_image(image_route, columns, rows):
     image = pg.image.load(image_route)

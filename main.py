@@ -22,10 +22,19 @@ class Game:
         self.modifiers = pg.sprite.Group()
         self.projectiles = pg.sprite.Group()
 
+        'Creating objects and add them to their corresponding group'
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
+        self.all_entities.add(self.taster)
+
         self.modifier = cls.Modifier((150, 150), self)
+        self.modifiers.add(self.modifier)
+
         self.player = cls.Player((300, 0), self)
-        self.all_entities.add(self.player, self.taster, self.modifier)
+        self.all_entities.add(self.player)
+
+        self.igneous_ball = cls.IgneousBall((200, 200), 2, self)
+        self.projectiles.add(self.igneous_ball)
+        
 
 
         n = 10
@@ -68,7 +77,7 @@ class Game:
 
     def draw(self):
         # Game loop - draw
-        self.screen.fill(lib.WHITE)
+        self.screen.fill(lib.BG_COLOR)
         self.all_entities.draw(self.screen)
         self.blocks.draw(self.screen)
         self.modifiers.draw(self.screen)
