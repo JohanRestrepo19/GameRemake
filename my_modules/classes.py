@@ -344,4 +344,8 @@ class Player(Character):
         self.move()
         Character.update(self)
         self.shoot()
+
+class Occultist(Character):
+    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Occultist.png'):
+        Character.__init__(self, position, game, sprite_route)
         

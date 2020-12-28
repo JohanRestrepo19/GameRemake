@@ -22,7 +22,7 @@ class Game:
         self.modifiers = pg.sprite.Group()
         self.projectiles = pg.sprite.Group()
 
-        'Creating objects and add them to their corresponding group'
+        '''Creating objects and add them to their corresponding group'''
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
         self.all_entities.add(self.taster)
 
@@ -35,14 +35,12 @@ class Game:
         self.igneous_ball = cls.IgneousBall((200, 200), 2, self)
         self.projectiles.add(self.igneous_ball)
         
-
-
         n = 10
 
         for i in range(n):
             position = (400, 0)
-            self.character = cls.Character(position, self)
-            self.all_entities.add(self.character)
+            self.occultist = cls.Occultist(position, self)
+            self.all_entities.add(self.occultist)
 
         self.run()
 
