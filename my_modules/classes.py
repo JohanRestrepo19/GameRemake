@@ -136,7 +136,7 @@ class Projectile(pg.sprite.Sprite):
         '''Blocks collision'''
         # Check if projectile collides with any block and then kills it
         collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
-        if collision_ls:            
+        if collision_ls:
             self.kill()
 
         '''Projectile out of screen'''
@@ -244,7 +244,7 @@ class Character(pg.sprite.Sprite):
             self.movement_counter += len(self.sprite_mx[self.direction])
 
     def sprite_animation(self):
-        if self.velx != 0:
+        if self.velx != 0 or self.vely != 0:
             if self.sprite_counter < lib.FPS:
                 self.sprite_counter += 1
             else:
@@ -324,7 +324,7 @@ class Player(Character):
             position = (self.rect.x, self.rect.y)
             #Check the direction the player is heading
             if self.direction == 0:                #
-                # Direction 0 means the player is moving to the left 
+                # Direction 0 means the player is moving to the left
                 # and the left direction of the igneous ball is 1
                 direction = 1
             if self.direction == 1:
@@ -336,8 +336,8 @@ class Player(Character):
             self.game.projectiles.add(new_igneous_ball)
             print(f'Number of igneous balls on screen {len(self.game.projectiles)}')
         else:
-            self.shot_counter += 1 
-            
+            self.shot_counter += 1
+
 
     def update(self):
         self.velx = 0
@@ -359,7 +359,7 @@ class Harpy(Character):
             self.direction = random.randint(0, 3)
 
             # move down direction
-            if self.direction == 0: 
+            if self.direction == 0:
                 self.vely = self.velocity
 
             # move left direction
@@ -403,3 +403,36 @@ class Harpy(Character):
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
+
+class Dragon(Harpy):
+    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Dragon.png'):
+        Harpy.__init__(self, position, game, sprite_route)
+        self.cool_down_shot = lib.FPS * 2
+        self.shot_counter = 0
+        # The dragon boss is always heading to the left
+        self.direction = 1
+
+    def shoot(self):
+        if (self.shot_counter > self.cool_down_shot):
+            self.shot_counter = 0
+            position = (self.rect.midleft)
+            direction = self.direction
+
+            new_igneous_ball = EnemyIgneousBall(position, direction, self.game)
+            self.game.projectiles.add(new_igneous_ball)
+        else:
+            self.shot_counter += 1
+
+    def move(self):
+        if (self.movement_counter > self.movement_counter_limit):
+            # Since the dragon is always heading to the left
+            # it is not necessary to define the new direction
+            # the dragon will be heading
+            self.movement_counter = 0
+        else:
+            self.movement_counter += len(self.sprite_mx[self.direction])
+
+    def update(self):
+        self.vely = self.velocity
+        Harpy.update(self)
+        self.shoot()
