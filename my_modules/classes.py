@@ -348,4 +348,58 @@ class Player(Character):
 class Occultist(Character):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Occultist.png'):
         Character.__init__(self, position, game, sprite_route)
-        
+
+class Harpy(Character):
+    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Harpy.png'):
+        Character.__init__(self, position, game, sprite_route)
+        self.movement_counter_limit = lib.FPS * 2
+
+    def move(self):
+        if self.movement_counter > self.movement_counter_limit:
+            self.direction = random.randint(0, 3)
+
+            # move down direction
+            if self.direction == 0: 
+                self.vely = self.velocity
+
+            # move left direction
+            if self.direction == 1 :
+                self.velx = -self.velocity
+
+            # move right direction
+            if self.direction == 2:
+                self.velx = self.velocity
+
+            # move up direction
+            if self.direction == 3:
+                self.vely = -self.velocity
+
+            self.movement_counter = 0
+        else:
+            self.movement_counter += len(self.sprite_mx[self.direction])
+
+    def update(self):
+        self.move()
+        self.sprite_animation()
+
+        self.rect.x += self.velx
+        # Check collision on the x-axis
+        collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
+        for block in collision_ls:
+            if (self.rect.right >= block.rect.left) and (self.velx > 0):
+                self.rect.right = block.rect.left
+                self.velx = 0
+            if (self.rect.left <= block.rect.right) and (self.velx < 0):
+                self.rect.left = block.rect.right
+                self.velx = 0
+
+        self.rect.y += self.vely
+        # Checko collision on the y-axis
+        collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
+        for block in collision_ls:
+            if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
+                self.rect.bottom = block.rect.top
+                self.vely = 0
+            if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
+                self.rect.top = block.rect.bottom
+                self.vely = 0

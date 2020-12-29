@@ -34,6 +34,9 @@ class Game:
 
         self.igneous_ball = cls.IgneousBall((200, 200), 2, self)
         self.projectiles.add(self.igneous_ball)
+
+        self.harpy = cls.Harpy((200, 200), self)
+        self.all_entities.add(self.harpy)
         
         n = 10
 
@@ -71,7 +74,6 @@ class Game:
         self.modifiers.update()
         self.projectiles.update()
         self.blocks.update()
-
 
     def draw(self):
         # Game loop - draw
