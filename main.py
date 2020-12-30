@@ -41,6 +41,9 @@ class Game:
         self.dragon = cls.Dragon((600, 30), self)
         self.all_entities.add(self.dragon)
 
+        self.viper = cls.Viper((400, 0), self)
+        self.all_entities.add(self.viper)
+
         n = 10
 
         for i in range(n):

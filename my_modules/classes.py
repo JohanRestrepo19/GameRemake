@@ -213,7 +213,7 @@ class Character(pg.sprite.Sprite):
         self.game = game
         #Movement counter is used to define the behavior of some enemies
         self.movement_counter = 60
-        self.movement_counter_limit = lib.FPS
+        self.movement_counter_limit = lib.FPS * 3
         self.velocity = 2
         self.velx, self.vely = 0, 0
         self.health = 200
@@ -460,3 +460,22 @@ class Dragon(Harpy):
         if self.rect.top <= 0:
             self.rect.top = 0
             self.vely = 0
+
+class Viper(Character):
+    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Viper.png'):
+        Character.__init__(self,position, game, sprite_route)
+        self.jump_distance = -12
+        self.cool_down_jump = lib.FPS * 2
+        self.jump_counter = self.cool_down_jump
+
+    def jump(self):
+        if self.jump_counter > self.cool_down_jump:
+            self.jump_counter = 0
+            self.vely = self.jump_distance
+        else:
+            self.jump_counter += 1
+    
+    def update(self):
+        self.jump()
+        Character.update(self)
+
