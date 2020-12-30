@@ -226,6 +226,8 @@ class Character(pg.sprite.Sprite):
     def gravity(self, gravity_value = lib.GRAVITY):
         if not self.on_ground:
             self.vely += gravity_value
+        if self.on_ground:
+            self.vely = 0
 
     def move(self):
         if self.movement_counter > self.movement_counter_limit:
@@ -244,7 +246,7 @@ class Character(pg.sprite.Sprite):
             self.movement_counter += len(self.sprite_mx[self.direction])
 
     def sprite_animation(self):
-        if self.velx != 0 or self.vely != 0:
+        if (self.velx != 0):
             if self.sprite_counter < lib.FPS:
                 self.sprite_counter += 1
             else:
@@ -340,6 +342,7 @@ class Player(Character):
 
 
     def update(self):
+        #print(f"Player's velocity: ({self.velx}, {self.vely})")
         self.velx = 0
         self.move()
         Character.update(self)
@@ -429,10 +432,31 @@ class Dragon(Harpy):
             # it is not necessary to define the new direction
             # the dragon will be heading
             self.movement_counter = 0
+            move_direction = random.randint(0, 1)
+
+            # Move up
+            if move_direction == 0:
+                self.vely = -self.velocity
+            # Move down
+            if move_direction == 1:
+                self.vely = self.velocity
+
         else:
             self.movement_counter += len(self.sprite_mx[self.direction])
 
+    def sprite_animation(self):
+        if (self.vely != 0):
+            if self.sprite_counter < lib.FPS:
+                self.sprite_counter += 1
+            else: self.sprite_counter = 0
+
+            sprite_divider = (lib.FPS // len(self.sprite_mx[self.direction])) + 1
+            self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
+
     def update(self):
-        self.vely = self.velocity
         Harpy.update(self)
         self.shoot()
+
+        if self.rect.top <= 0:
+            self.rect.top = 0
+            self.vely = 0

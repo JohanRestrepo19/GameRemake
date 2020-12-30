@@ -38,7 +38,7 @@ class Game:
         self.harpy = cls.Harpy((200, 200), self)
         self.all_entities.add(self.harpy)
 
-        self.dragon = cls.Dragon((500, 30), self)
+        self.dragon = cls.Dragon((600, 30), self)
         self.all_entities.add(self.dragon)
 
         n = 10
