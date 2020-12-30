@@ -479,3 +479,29 @@ class Viper(Character):
         self.jump()
         Character.update(self)
 
+class Golem(Character):
+    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Golem.png'):
+        Character.__init__(self, position, game, sprite_route)
+        self.cool_down_shot = lib.FPS
+        self.shot_counter = self.cool_down_shot
+
+    def shoot(self):        
+        if self.shot_counter > self.cool_down_shot:
+            self.shot_counter = 0
+            if self.velx > 0:
+                position = (self.rect.right, self.rect.y)
+                direction = 2
+                new_igneous_ball = EnemyIgneousBall(position, direction, self.game)
+                self.game.projectiles.add(new_igneous_ball)
+            
+            if self.velx < 0:
+                position = (self.rect.left, self.rect.y)
+                direction = 1
+                new_igneous_ball = EnemyIgneousBall(position, direction, self.game)
+                self.game.projectiles.add(new_igneous_ball)
+        else:
+            self.shot_counter += 1
+
+    def update(self):
+        self.shoot()
+        Character.update(self)

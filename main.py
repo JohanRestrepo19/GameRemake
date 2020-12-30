@@ -43,13 +43,16 @@ class Game:
 
         self.viper = cls.Viper((400, 0), self)
         self.all_entities.add(self.viper)
+        
+        self.golem = cls.Golem((400, 0), self)
+        self.all_entities.add(self.golem)
 
         n = 10
 
-        for i in range(n):
+        '''for i in range(n):
             position = (400, 0)
             self.occultist = cls.Occultist(position, self)
-            self.all_entities.add(self.occultist)
+            self.all_entities.add(self.occultist)'''
 
         self.run()
 
