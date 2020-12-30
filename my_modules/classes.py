@@ -16,6 +16,7 @@ class Taster(pg.sprite.Sprite):
         self.velx, self.vely = 0, 0
         self.health = 200
         self.on_ground = False
+        self.collision_damage = 0
 
     def gravity(self, gravity_value = lib.GRAVITY):
         if not self.on_ground:
@@ -347,6 +348,13 @@ class Player(Character):
         self.move()
         Character.update(self)
         self.shoot()
+
+        '''Check collision with normal enemies'''
+        collision_ls = pg.sprite.spritecollide(self, self.game.all_entities, False)
+        for enemy in collision_ls:
+            if not isinstance(enemy, (Player, Block, Modifier, IgneousBall, Dragon, WereWolf)):
+                self.health -= enemy.collision_damage
+                print(f"Player's health {self.health}")
 
 class Occultist(Character):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Occultist.png'):

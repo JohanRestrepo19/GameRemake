@@ -28,25 +28,25 @@ class Game:
         self.all_entities.add(self.taster)
 
         self.modifier = cls.Modifier((150, 150), self)
-        self.modifiers.add(self.modifier)
+        #self.modifiers.add(self.modifier)
 
         self.player = cls.Player((300, 0), self)
         self.all_entities.add(self.player)
 
         self.igneous_ball = cls.IgneousBall((200, 200), 2, self)
-        self.projectiles.add(self.igneous_ball)
+        #self.projectiles.add(self.igneous_ball)
 
         self.harpy = cls.Harpy((200, 200), self)
-        self.all_entities.add(self.harpy)
+        #self.all_entities.add(self.harpy)
 
         self.dragon = cls.Dragon((600, 30), self)
         self.all_entities.add(self.dragon)
 
         self.viper = cls.Viper((400, 0), self)
-        self.all_entities.add(self.viper)
+        #self.all_entities.add(self.viper)
         
         self.golem = cls.Golem((400, 0), self)
-        self.all_entities.add(self.golem)
+        #self.all_entities.add(self.golem)
 
         self.were_wolf = cls.WereWolf((400, 0), self)
         self.all_entities.add(self.were_wolf)
