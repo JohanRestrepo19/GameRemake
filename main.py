@@ -21,6 +21,7 @@ class Game:
         self.blocks = lib.load_map('tiled/level01.json')
         self.modifiers = pg.sprite.Group()
         self.projectiles = pg.sprite.Group()
+        self.were_wolf_vipers = pg.sprite.Group()
 
         '''Creating objects and add them to their corresponding group'''
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
@@ -47,12 +48,15 @@ class Game:
         self.golem = cls.Golem((400, 0), self)
         self.all_entities.add(self.golem)
 
-        n = 10
+        self.were_wolf = cls.WereWolf((400, 0), self)
+        self.all_entities.add(self.were_wolf)
 
-        '''for i in range(n):
+        n = 0
+
+        for i in range(n):
             position = (400, 0)
             self.occultist = cls.Occultist(position, self)
-            self.all_entities.add(self.occultist)'''
+            self.all_entities.add(self.occultist)
 
         self.run()
 
@@ -83,6 +87,7 @@ class Game:
         self.modifiers.update()
         self.projectiles.update()
         self.blocks.update()
+        self.were_wolf_vipers.update()
 
     def draw(self):
         # Game loop - draw
@@ -91,6 +96,7 @@ class Game:
         self.blocks.draw(self.screen)
         self.modifiers.draw(self.screen)
         self.projectiles.draw(self.screen)
+        self.were_wolf_vipers.draw(self.screen)
         pg.display.flip()
 
     def show_start_screen(self):

@@ -466,7 +466,7 @@ class Viper(Character):
         Character.__init__(self,position, game, sprite_route)
         self.jump_distance = -12
         self.cool_down_jump = lib.FPS * 2
-        self.jump_counter = self.cool_down_jump
+        self.jump_counter = random.randint(0, self.cool_down_jump)
 
     def jump(self):
         if self.jump_counter > self.cool_down_jump:
@@ -505,3 +505,20 @@ class Golem(Character):
     def update(self):
         self.shoot()
         Character.update(self)
+
+class WereWolf(Character):
+    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/WereWolf.png'):
+        Character.__init__(self, position, game, sprite_route)
+        self.viper_limit = 5
+
+    def invoke(self):
+        if (len(self.game.were_wolf_vipers) < self.viper_limit):
+            position = self.rect.center
+            new_viper = Viper(position, self.game)
+            self.game.were_wolf_vipers.add(new_viper)
+            print(f"Were-wolf's viper amount {len(self.game.were_wolf_vipers)}")
+    
+    def update(self):
+        self.invoke()
+        Character.update(self)
+        
