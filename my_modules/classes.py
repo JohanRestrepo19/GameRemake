@@ -356,6 +356,16 @@ class Player(Character):
                 self.health -= enemy.collision_damage
                 print(f"Player's health {self.health}")
 
+        '''Check collision with modifiers'''
+        collision_ls = pg.sprite.spritecollide(self, self.game.modifiers, True)
+        for modifier in collision_ls:
+            if isinstance(modifier, HealthModifier):
+                self.health += HealthModifier.life_increase
+                print(f"Player's increase life to : {self.health}")
+            elif isinstance(modifier, IgneousBallModifier):
+                IgneousBall.damage += IgneousBallModifier.damage_increase
+                print(f"Igenous ball's damage: {IgneousBall.damage}")
+
 class Occultist(Character):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Occultist.png'):
         Character.__init__(self, position, game, sprite_route)

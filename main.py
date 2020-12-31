@@ -27,8 +27,8 @@ class Game:
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
         self.all_entities.add(self.taster)
 
-        self.modifier = cls.Modifier((150, 150), self)
-        #self.modifiers.add(self.modifier)
+        self.modifier = cls.IgneousBallModifier((150, 150), self)
+        self.modifiers.add(self.modifier)
 
         self.player = cls.Player((300, 0), self)
         self.all_entities.add(self.player)
