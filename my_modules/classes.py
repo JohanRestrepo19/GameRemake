@@ -366,6 +366,22 @@ class Player(Character):
                 IgneousBall.damage += IgneousBallModifier.damage_increase
                 print(f"Igenous ball's damage: {IgneousBall.damage}")
 
+        '''Check collision with special enemies'''
+        # Dragon, Were-wolf
+        collision_ls = pg.sprite.spritecollide(self, self.game.all_entities, False)
+        for enemy in collision_ls:
+            if isinstance(enemy, (Dragon, WereWolf)):
+                self.health -= enemy.collision_damage
+                print(f"(Special enemy) Player's health {self.health}")
+
+        # Due to the fact that the Werewolf's vipers are in a different gruop
+        # it is necessary to check them in another collision check
+
+        collision_ls = pg.sprite.spritecollide(self, self.game.were_wolf_vipers, False)
+        for viper in collision_ls:
+            self.health -= viper.collision_damage
+            print(f"(Viper) Player's health {self.health}")
+
 class Occultist(Character):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Occultist.png'):
         Character.__init__(self, position, game, sprite_route)
