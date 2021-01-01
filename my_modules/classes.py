@@ -171,7 +171,19 @@ class EnemyIgneousBall(Projectile):
     def __init__(self, position, direction, game, sprite_route = 'resources/images/sprites/DragonBreath.png'):
         Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = EnemyIgneousBall.damage
-        print(self.damage)
+        
+
+    def update(self):
+        Projectile.update(self)
+
+        '''Check collision with player'''
+        collision_ls = pg.sprite.spritecollide(self, self.game.all_entities, False)
+        for player in collision_ls:
+            if isinstance(player, Player):
+                player.health -= self.damage
+                self.kill()
+                print(f"(EnemyIgenousBall) Player's health: {player.health}")
+
 
 class Modifier(pg.sprite.Sprite):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0,0]):
