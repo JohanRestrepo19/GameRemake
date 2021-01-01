@@ -151,7 +151,20 @@ class IgneousBall(Projectile):
     def __init__(self, position, direction, game,sprite_route = 'resources/images/sprites/IgneousBall.png'):
         Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = IgneousBall.damage
-        #print(f"Igneous ball's damage{self.damage}")
+        
+    def update(self):
+        Projectile.update(self)
+
+        '''Check collision with enemies and enemy igneous ball'''
+        # Collision with enemies
+        collision_ls = pg.sprite.spritecollide(self, self.game.all_entities, False)
+
+        for enemy in collision_ls:
+            # The Igneous ball will hit only the enemies in the all entities group
+            if not isinstance(enemy, Player):
+                enemy.health -= self.damage
+                self.kill()
+
 
 class EnemyIgneousBall(Projectile):
     damage = 20
@@ -259,6 +272,11 @@ class Character(pg.sprite.Sprite):
             sprite_divider = (lib.FPS // len(self.sprite_mx[self.direction])) + 1
             self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
 
+    def check_health(self):
+        # Check if the character is still alive, if the health is less than zero it dies
+        if self.health < 0:
+            self.kill()
+
     def update(self):
         self.gravity()
         self.move()
@@ -299,6 +317,8 @@ class Character(pg.sprite.Sprite):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
                 self.on_ground = False
+        
+        self.check_health()        
 
 class Player(Character):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Player.png', col = 3, row = 2):
@@ -440,12 +460,15 @@ class Harpy(Character):
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
+        
+        Character.check_health(self)
 
 class Dragon(Harpy):
     def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Dragon.png'):
         Harpy.__init__(self, position, game, sprite_route)
         self.cool_down_shot = lib.FPS * 2
         self.shot_counter = 0
+        self.health = 200
         # The dragon boss is always heading to the left
         self.direction = 1
 

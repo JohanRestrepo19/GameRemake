@@ -49,7 +49,7 @@ class Game:
         #self.all_entities.add(self.golem)
 
         self.were_wolf = cls.WereWolf((400, 0), self)
-        self.all_entities.add(self.were_wolf)
+        #self.all_entities.add(self.were_wolf)
 
         n = 0
 
