@@ -97,6 +97,9 @@ class Spike(Block):
         self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]]
         self.damage = 1
 
+    def get_damage(self):
+        return self.damage
+
 class Projectile(pg.sprite.Sprite):
     damage = 10
     def __init__(self, position, direction, game, sprite_route = 'resources/images/sprites/IgneousBall.png'):
@@ -112,6 +115,9 @@ class Projectile(pg.sprite.Sprite):
         self.velocity = 4
         self.velx, self.vely = 0, 0
         self.damage = Projectile.damage
+    
+    def get_damage(self):
+        return self.damage
 
     def move(self):
         # if direction equals to 1 that means that projectile will head to left direction
@@ -164,7 +170,6 @@ class IgneousBall(Projectile):
             if not isinstance(enemy, Player):
                 enemy.health -= self.damage
                 self.kill()
-
 
 class EnemyIgneousBall(Projectile):
     damage = 20
@@ -242,12 +247,27 @@ class Character(pg.sprite.Sprite):
         self.movement_counter_limit = lib.FPS * 3
         self.velocity = 2
         self.velx, self.vely = 0, 0
-        self.health = 200
-        self.collision_damage = 1
+        self._health = 200
+        self._collision_damage = 1
         self.reward_score = 10
         self.death_sound = None
         self.damage_sound = None
         self.on_ground = False
+
+    '''I'm using decorators just for try them out'''
+    @property
+    def health(self):
+        return self._health
+
+    @health.setter
+    def health(self, health):
+        #fprint('Taking damage')
+        self._health = health
+
+    @property
+    def collision_damage(self):
+        return self._collision_damage
+
 
     def gravity(self, gravity_value = lib.GRAVITY):
         if not self.on_ground:
@@ -384,8 +404,9 @@ class Player(Character):
         '''Check collision with normal enemies'''
         collision_ls = pg.sprite.spritecollide(self, self.game.all_entities, False)
         for enemy in collision_ls:
-            if not isinstance(enemy, (Player, Block, Modifier, IgneousBall, Dragon, WereWolf)):
+            if not isinstance(enemy, (Player, Block, Modifier, IgneousBall, Dragon, WereWolf, Taster)):
                 self.health -= enemy.collision_damage
+                #self.set_health(self.get_health() - enemy.get_collision_damage())
                 print(f"Player's health {self.health}")
 
         '''Check collision with modifiers'''

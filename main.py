@@ -27,7 +27,7 @@ class Game:
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
         self.all_entities.add(self.taster)
 
-        self.modifier = cls.IgneousBallModifier((150, 150), self)
+        self.modifier = cls.HealthModifier((150, 150), self)
         self.modifiers.add(self.modifier)
 
         self.player = cls.Player((300, 0), self)
@@ -43,7 +43,7 @@ class Game:
         self.all_entities.add(self.dragon)
 
         self.viper = cls.Viper((400, 0), self)
-        #self.all_entities.add(self.viper)
+        self.all_entities.add(self.viper)
         
         self.golem = cls.Golem((400, 0), self)
         #self.all_entities.add(self.golem)
