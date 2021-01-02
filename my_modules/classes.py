@@ -4,7 +4,7 @@ import my_modules.library as lib
 
 
 class Taster(pg.sprite.Sprite):
-    def __init__(self, position, game, color = lib.BLACK):
+    def __init__(self, position, game, color=lib.BLACK):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface([50, 50])
         self.image.fill(color)
@@ -18,7 +18,7 @@ class Taster(pg.sprite.Sprite):
         self.on_ground = False
         self.collision_damage = 0
 
-    def gravity(self, gravity_value = lib.GRAVITY):
+    def gravity(self, gravity_value=lib.GRAVITY):
         if not self.on_ground:
             self.vely += gravity_value
 
@@ -34,14 +34,13 @@ class Taster(pg.sprite.Sprite):
         if keys[pg.K_s]:
             self.vely = self.velocity
 
-
     def update(self):
         self.velx = 0
         self.gravity()
         self.move()
 
         self.rect.x += self.velx
-        #Check collision on the x-axis
+        # Check collision on the x-axis
         collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
         for block in collision_ls:
             if (self.rect.right >= block.rect.left) and (self.velx > 0):
@@ -73,8 +72,7 @@ class Taster(pg.sprite.Sprite):
                 self.vely = 0
                 self.on_ground = False
 
-#ls = list
-# mx = matrix
+
 class Block(pg.sprite.Sprite):
     def __init__(self, position, sprite_route, sprite_position):
         pg.sprite.Sprite.__init__(self)
@@ -86,9 +84,11 @@ class Block(pg.sprite.Sprite):
     def update(self):
         pass
 
+
 class LimiterBlock(Block):
     def __init__(self, position, sprite_route, sprite_position):
         Block.__init__(self, position, sprite_route, sprite_position)
+
 
 class Spike(Block):
     def __init__(self, position, sprite_route, sprite_position):
@@ -100,9 +100,11 @@ class Spike(Block):
     def get_damage(self):
         return self.damage
 
+
 class Projectile(pg.sprite.Sprite):
     damage = 10
-    def __init__(self, position, direction, game, sprite_route = 'resources/images/sprites/IgneousBall.png'):
+
+    def __init__(self, position, direction, game, sprite_route='resources/images/sprites/IgneousBall.png'):
         pg.sprite.Sprite.__init__(self)
         self.sprite_mx = lib.crop_image(sprite_route, 4, 2)
         self.sprite_size = 1
@@ -152,9 +154,11 @@ class Projectile(pg.sprite.Sprite):
             self.kill()
             print(f'Igneous balls on screen {len(self.game.projectiles)}')
 
+
 class IgneousBall(Projectile):
     damage = 20
-    def __init__(self, position, direction, game,sprite_route = 'resources/images/sprites/IgneousBall.png'):
+
+    def __init__(self, position, direction, game, sprite_route='resources/images/sprites/IgneousBall.png'):
         Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = IgneousBall.damage
         
@@ -171,12 +175,13 @@ class IgneousBall(Projectile):
                 enemy.health -= self.damage
                 self.kill()
 
+
 class EnemyIgneousBall(Projectile):
     damage = 20
-    def __init__(self, position, direction, game, sprite_route = 'resources/images/sprites/DragonBreath.png'):
+
+    def __init__(self, position, direction, game, sprite_route='resources/images/sprites/DragonBreath.png'):
         Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = EnemyIgneousBall.damage
-        
 
     def update(self):
         Projectile.update(self)
@@ -191,7 +196,8 @@ class EnemyIgneousBall(Projectile):
 
 
 class Modifier(pg.sprite.Sprite):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0,0]):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Modifiers.png', col=10, row=4,
+                 sprite_position=(0, 0)):
         pg.sprite.Sprite.__init__(self)
         self.sprite_mx = lib.crop_image(sprite_route, col, row)
         self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]]
@@ -200,7 +206,7 @@ class Modifier(pg.sprite.Sprite):
         self.vely = 0.1
         self.game = game
 
-    def gravity(self, gravity_value = lib.GRAVITY):
+    def gravity(self, gravity_value=lib.GRAVITY):
         if self.vely != 0:
             self.vely += gravity_value
 
@@ -220,20 +226,36 @@ class Modifier(pg.sprite.Sprite):
         self.check_collision()
         self.move()
 
+
 class HealthModifier(Modifier):
     life_increase = 249
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [0, 0]):
+
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Modifiers.png', col=10, row=4,
+                 sprite_position=(0, 0)):
         Modifier.__init__(self, position, game, sprite_route, col, row, sprite_position)
+
 
 class IgneousBallModifier(Modifier):
     damage_increase = 20
     change_appearance = 'resources/images/sprites/DragonBreath.png'
 
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Modifiers.png', col = 10, row = 4, sprite_position = [2, 5]):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Modifiers.png', col=10, row=4,
+                 sprite_position=(2, 5)):
         Modifier.__init__(self, position, game, sprite_route, col, row, sprite_position)
 
+
 class Character(pg.sprite.Sprite):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/BlackOccultist.png', col = 3, row = 4):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/BlackOccultist.png', col=3, row=4):
+        """Character's class constructor
+
+        Args:
+            position (list): initial x and y position of the character
+            game (Game, optional): Reference to the Game instance. Defaults to None.
+            sprite_route (str, optional): route of the sprite's image of the character.
+                                          Defaults to 'resources/images/sprites/BlackOccultist.png'.
+            col (int, optional): number of columns of the sprite. Defaults to 3.
+            row (int, optional): number of rows of the sprite. Defaults to 4.
+        """
         pg.sprite.Sprite.__init__(self)
         self.sprite_mx = lib.crop_image(sprite_route, col, row)
         self.direction = 0
@@ -242,7 +264,7 @@ class Character(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
         self.game = game
-        #Movement counter is used to define the behavior of some enemies
+        # Movement counter is used to define the behavior of some enemies
         self.movement_counter = 60
         self.movement_counter_limit = lib.FPS * 3
         self.velocity = 2
@@ -261,15 +283,14 @@ class Character(pg.sprite.Sprite):
 
     @health.setter
     def health(self, health):
-        #fprint('Taking damage')
+        # print(f'Taking damage')
         self._health = health
 
     @property
     def collision_damage(self):
         return self._collision_damage
 
-
-    def gravity(self, gravity_value = lib.GRAVITY):
+    def gravity(self, gravity_value=lib.GRAVITY):
         if not self.on_ground:
             self.vely += gravity_value
         if self.on_ground:
@@ -292,7 +313,7 @@ class Character(pg.sprite.Sprite):
             self.movement_counter += len(self.sprite_mx[self.direction])
 
     def sprite_animation(self):
-        if (self.velx != 0):
+        if self.velx != 0:
             if self.sprite_counter < lib.FPS:
                 self.sprite_counter += 1
             else:
@@ -344,7 +365,7 @@ class Character(pg.sprite.Sprite):
                 self.on_ground = True
                 self.vely = 0
 
-            #Check collision with block above the character
+            # Check collision with block above the character
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
@@ -352,13 +373,17 @@ class Character(pg.sprite.Sprite):
         
         self.check_health()        
 
+
 class Player(Character):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Player.png', col = 3, row = 2):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Player.png', col=3, row=2):
         Character.__init__(self, position, game, sprite_route, col, row)
         self.velocity = 5
         self.score = 0
         self.shot_counter = lib.FPS
         self.cool_down_shot = lib.FPS // 2
+
+    def draw_information(self, position):
+        pass
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -377,12 +402,13 @@ class Player(Character):
         if (self.shot_counter > self.cool_down_shot) and keys[pg.K_SPACE]:
             self.shot_counter = 0
             position = (self.rect.x, self.rect.y)
-            #Check the direction the player is heading
+            direction = 1
+            # Check the direction the player is heading
             if self.direction == 0:                #
                 # Direction 0 means the player is moving to the left
                 # and the left direction of the igneous ball is 1
                 direction = 1
-            if self.direction == 1:
+            elif self.direction == 1:
                 # Direction 1 means the player is moving to the right
                 # and the right direction of the igneous ball is 2
                 direction = 2
@@ -393,9 +419,8 @@ class Player(Character):
         else:
             self.shot_counter += 1
 
-
     def update(self):
-        #print(f"Player's velocity: ({self.velx}, {self.vely})")
+        # print(f"Player's velocity: ({self.velx}, {self.vely})")
         self.velx = 0
         self.move()
         Character.update(self)
@@ -406,7 +431,7 @@ class Player(Character):
         for enemy in collision_ls:
             if not isinstance(enemy, (Player, Block, Modifier, IgneousBall, Dragon, WereWolf, Taster)):
                 self.health -= enemy.collision_damage
-                #self.set_health(self.get_health() - enemy.get_collision_damage())
+                # self.set_health(self.get_health() - enemy.get_collision_damage())
                 print(f"Player's health {self.health}")
 
         '''Check collision with modifiers'''
@@ -435,12 +460,14 @@ class Player(Character):
             self.health -= viper.collision_damage
             print(f"(Viper) Player's health {self.health}")
 
+
 class Occultist(Character):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Occultist.png'):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Occultist.png'):
         Character.__init__(self, position, game, sprite_route)
 
+
 class Harpy(Character):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Harpy.png'):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Harpy.png'):
         Character.__init__(self, position, game, sprite_route)
         self.movement_counter_limit = lib.FPS * 2
 
@@ -453,7 +480,7 @@ class Harpy(Character):
                 self.vely = self.velocity
 
             # move left direction
-            if self.direction == 1 :
+            if self.direction == 1:
                 self.velx = -self.velocity
 
             # move right direction
@@ -484,7 +511,7 @@ class Harpy(Character):
                 self.velx = 0
 
         self.rect.y += self.vely
-        # Checko collision on the y-axis
+        # Check collision on the y-axis
         collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
         for block in collision_ls:
             if (self.rect.bottom >= block.rect.top) and (self.vely > 0):
@@ -496,8 +523,9 @@ class Harpy(Character):
         
         Character.check_health(self)
 
+
 class Dragon(Harpy):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Dragon.png'):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Dragon.png'):
         Harpy.__init__(self, position, game, sprite_route)
         self.cool_down_shot = lib.FPS * 2
         self.shot_counter = 0
@@ -506,9 +534,9 @@ class Dragon(Harpy):
         self.direction = 1
 
     def shoot(self):
-        if (self.shot_counter > self.cool_down_shot):
+        if self.shot_counter > self.cool_down_shot:
             self.shot_counter = 0
-            position = (self.rect.midleft)
+            position = self.rect.midleft
             direction = self.direction
 
             new_igneous_ball = EnemyIgneousBall(position, direction, self.game)
@@ -517,7 +545,7 @@ class Dragon(Harpy):
             self.shot_counter += 1
 
     def move(self):
-        if (self.movement_counter > self.movement_counter_limit):
+        if self.movement_counter > self.movement_counter_limit:
             # Since the dragon is always heading to the left
             # it is not necessary to define the new direction
             # the dragon will be heading
@@ -535,10 +563,11 @@ class Dragon(Harpy):
             self.movement_counter += len(self.sprite_mx[self.direction])
 
     def sprite_animation(self):
-        if (self.vely != 0):
+        if self.vely != 0:
             if self.sprite_counter < lib.FPS:
                 self.sprite_counter += 1
-            else: self.sprite_counter = 0
+            else:
+                self.sprite_counter = 0
 
             sprite_divider = (lib.FPS // len(self.sprite_mx[self.direction])) + 1
             self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
@@ -551,9 +580,10 @@ class Dragon(Harpy):
             self.rect.top = 0
             self.vely = 0
 
+
 class Viper(Character):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Viper.png'):
-        Character.__init__(self,position, game, sprite_route)
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Viper.png'):
+        Character.__init__(self, position, game, sprite_route)
         self.jump_distance = -12
         self.cool_down_jump = lib.FPS * 2
         self.jump_counter = random.randint(0, self.cool_down_jump)
@@ -569,8 +599,9 @@ class Viper(Character):
         self.jump()
         Character.update(self)
 
+
 class Golem(Character):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/Golem.png'):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Golem.png'):
         Character.__init__(self, position, game, sprite_route)
         self.cool_down_shot = lib.FPS
         self.shot_counter = self.cool_down_shot
@@ -596,13 +627,14 @@ class Golem(Character):
         self.shoot()
         Character.update(self)
 
+
 class WereWolf(Character):
-    def __init__(self, position, game = None, sprite_route = 'resources/images/sprites/WereWolf.png'):
+    def __init__(self, position, game=None, sprite_route='resources/images/sprites/WereWolf.png'):
         Character.__init__(self, position, game, sprite_route)
         self.viper_limit = 5
 
     def invoke(self):
-        if (len(self.game.were_wolf_vipers) < self.viper_limit):
+        if len(self.game.were_wolf_vipers) < self.viper_limit:
             position = self.rect.center
             new_viper = Viper(position, self.game)
             self.game.were_wolf_vipers.add(new_viper)
@@ -611,4 +643,3 @@ class WereWolf(Character):
     def update(self):
         self.invoke()
         Character.update(self)
-        
