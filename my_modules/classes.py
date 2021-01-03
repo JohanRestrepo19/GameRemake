@@ -81,9 +81,6 @@ class Block(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = position[0], position[1]
 
-    def update(self):
-        pass
-
 
 class LimiterBlock(Block):
     def __init__(self, position, sprite_route, sprite_position):
