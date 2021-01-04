@@ -267,6 +267,7 @@ class Character(pg.sprite.Sprite):
         self.velocity = 2
         self.velx, self.vely = 0, 0
         self._health = 200
+        self._max_health = self.health
         self._collision_damage = 1
         self.reward_score = 10
         self.death_sound = None
@@ -284,6 +285,10 @@ class Character(pg.sprite.Sprite):
         self._health = health
 
     @property
+    def max_health(self):
+        return self._max_health
+
+    @property
     def collision_damage(self):
         return self._collision_damage
 
@@ -292,6 +297,29 @@ class Character(pg.sprite.Sprite):
             self.vely += gravity_value
         if self.on_ground:
             self.vely = 0
+
+    def draw_health(self, health_color=lib.GREEN, rect_width=100, rect_height=10):
+        health_percent = (self.health * 100) // self.max_health
+
+        if health_percent < 0 or health_percent > 100:
+            raise Exception(f'The health_percent must be a value between 0 and 100. The value of health_percent was {health_percent}')
+        
+        # Drawing the red rectangle
+        
+        rect_init_pos = (self.rect.centerx - rect_width // 2, self.rect.top - rect_height)
+        rect_dimension = (rect_width, rect_height)
+        rect_ls = [rect_init_pos, rect_dimension]
+        pg.draw.rect(self.game.screen, lib.RED, rect_ls)
+
+        # Calculating the health_rect rect_dimension
+        health_width = (rect_width * health_percent) // 100
+        health_height = (rect_height)
+
+        # Drawing the health rectangle
+        health_init_pos = rect_init_pos
+        health_dimension = (health_width, health_height)
+        health_ls = [health_init_pos, health_dimension]
+        pg.draw.rect(self.game.screen, health_color, health_ls)
 
     def move(self):
         if self.movement_counter > self.movement_counter_limit:
@@ -331,6 +359,7 @@ class Character(pg.sprite.Sprite):
         self.gravity()
         self.move()
         self.sprite_animation()
+        
 
         self.rect.x += self.velx
         # Check collision on the x-axis
@@ -368,7 +397,9 @@ class Character(pg.sprite.Sprite):
                 self.vely = 0
                 self.on_ground = False
         
-        self.check_health()        
+        self.check_health()
+        if self.health > 0:
+            self.draw_health()       
 
 
 class Player(Character):

@@ -91,13 +91,13 @@ class Game:
 
     def draw(self):
         # Game loop - draw
-        self.screen.fill(lib.BG_COLOR)
         self.all_entities.draw(self.screen)
         self.blocks.draw(self.screen)
         self.modifiers.draw(self.screen)
         self.projectiles.draw(self.screen)
         self.were_wolf_vipers.draw(self.screen)
         pg.display.flip()
+        self.screen.fill(lib.BG_COLOR)
 
     def show_start_screen(self):
         pass
