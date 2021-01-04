@@ -43,10 +43,10 @@ class Game:
         self.all_entities.add(self.dragon)
 
         self.viper = cls.Viper((400, 0), self)
-        self.all_entities.add(self.viper)
+        #self.all_entities.add(self.viper)
         
         self.golem = cls.Golem((400, 0), self)
-        #self.all_entities.add(self.golem)
+        self.all_entities.add(self.golem)
 
         self.were_wolf = cls.WereWolf((400, 0), self)
         #self.all_entities.add(self.were_wolf)

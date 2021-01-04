@@ -172,6 +172,13 @@ class IgneousBall(Projectile):
                 enemy.health -= self.damage
                 self.kill()
 
+        # Collision with EnemyIgneousBall
+        collision_ls = pg.sprite.spritecollide(self, self.game.projectiles, False)
+        for enemy_ball in collision_ls:
+            if isinstance(enemy_ball, EnemyIgneousBall):
+                enemy_ball.kill()
+                self.kill()
+
 
 class EnemyIgneousBall(Projectile):
     damage = 20
@@ -287,6 +294,10 @@ class Character(pg.sprite.Sprite):
     @property
     def max_health(self):
         return self._max_health
+
+    @max_health.setter
+    def max_health(self, health):
+        self._max_health = health
 
     @property
     def collision_damage(self):
@@ -405,6 +416,8 @@ class Character(pg.sprite.Sprite):
 class Player(Character):
     def __init__(self, position, game=None, sprite_route='resources/images/sprites/Player.png', col=3, row=2):
         Character.__init__(self, position, game, sprite_route, col, row)
+        self.health = 249
+        self.max_health = self.health
         self.velocity = 5
         self.score = 0
         self.shot_counter = lib.FPS
@@ -465,9 +478,12 @@ class Player(Character):
         '''Check collision with modifiers'''
         collision_ls = pg.sprite.spritecollide(self, self.game.modifiers, True)
         for modifier in collision_ls:
+            # Health modifier collision
             if isinstance(modifier, HealthModifier):
-                self.health += HealthModifier.life_increase
+                #self.health += HealthModifier.life_increase
+                self.health = self.max_health
                 print(f"Player's increase life to : {self.health}")
+            # Igneous ball modifier collision
             elif isinstance(modifier, IgneousBallModifier):
                 IgneousBall.damage += IgneousBallModifier.damage_increase
                 print(f"Igenous ball's damage: {IgneousBall.damage}")
