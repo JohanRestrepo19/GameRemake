@@ -6,6 +6,11 @@ import my_modules.classes as cls
 
 WIDTH = 800
 HEIGHT = 600
+RIGHT_LIMIT = WIDTH - 200
+LEFT_LIMIT = 200
+UPPER_LIMIT = 100
+LOWER_LIMIT = HEIGHT - 100
+
 FPS = 60
 GRAVITY = 0.5
 

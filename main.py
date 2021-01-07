@@ -13,6 +13,37 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
+    def map_movement(self, *groups):
+        # Checking the limits on the x-axis
+        if self.player.rect.right >= lib.RIGHT_LIMIT:
+            self.player.rect.right = lib.RIGHT_LIMIT
+            # Background
+            # Access to each group
+            for group in groups:
+                # Change the position of each entity
+                for entity in group:
+                    entity.rect.x -= self.player.velx
+        elif self.player.rect.left <= lib.LEFT_LIMIT:
+            self.player.rect.left = lib.LEFT_LIMIT
+            # Background
+            for group in groups:
+                for entity in group:
+                    entity.rect.x += abs(self.player.velx)
+
+        # Checking the limits on the y-axis
+        if self.player.rect.top <= lib.UPPER_LIMIT:
+            self.player.rect.top = lib.UPPER_LIMIT
+            # Background
+            for group in groups:
+                for entity in group:
+                    entity.rect.y += abs(self.player.vely)
+        elif self.player.rect.bottom >= lib.LOWER_LIMIT:
+            self.player.rect.bottom = lib.LOWER_LIMIT
+            # Background
+            for group in groups:
+                for entity in group:
+                    entity.rect.y -= abs(self.player.vely)
+            
     def new(self):
         # start a new game
         '''Creation of all groups'''
@@ -88,6 +119,7 @@ class Game:
         self.projectiles.update()
         self.blocks.update()
         self.were_wolf_vipers.update()
+        self.map_movement(self.all_entities, self.modifiers, self.projectiles, self.blocks, self.were_wolf_vipers)
 
     def draw(self):
         # Game loop - draw
