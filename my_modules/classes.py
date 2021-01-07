@@ -587,6 +587,17 @@ class Dragon(Harpy):
         # The dragon boss is always heading to the left
         self.direction = 1
 
+    def check_health(self):
+        # Check if the character is still alive, if the health is less than zero it dies
+        if self.health <= 0:
+            health_modifier = HealthModifier(self.rect.center, self.game)
+            igneous_ball_modifier = IgneousBallModifier((self.rect.x + 20, self.rect.y), self.game)
+            self.game.modifiers.add(health_modifier, igneous_ball_modifier)
+            self.kill()
+        
+        if self.health > 0:
+            self.draw_health()
+
     def shoot(self):
         if self.shot_counter > self.cool_down_shot:
             self.shot_counter = 0
@@ -627,6 +638,7 @@ class Dragon(Harpy):
             self.image = self.sprite_mx[self.direction][self.sprite_counter // sprite_divider]
 
     def update(self):
+        self.check_health()
         Harpy.update(self)
         self.shoot()
 
