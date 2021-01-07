@@ -27,7 +27,7 @@ class Game:
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
         self.all_entities.add(self.taster)
 
-        self.modifier = cls.HealthModifier((150, 150), self)
+        self.modifier = cls.IgneousBallModifier((150, 150), self)
         self.modifiers.add(self.modifier)
 
         self.player = cls.Player((300, 0), self)
@@ -37,13 +37,13 @@ class Game:
         #self.projectiles.add(self.igneous_ball)
 
         self.harpy = cls.Harpy((200, 200), self)
-        #self.all_entities.add(self.harpy)
+        self.all_entities.add(self.harpy)
 
         self.dragon = cls.Dragon((600, 30), self)
         self.all_entities.add(self.dragon)
 
         self.viper = cls.Viper((400, 0), self)
-        #self.all_entities.add(self.viper)
+        self.all_entities.add(self.viper)
         
         self.golem = cls.Golem((400, 0), self)
         self.all_entities.add(self.golem)
@@ -51,7 +51,7 @@ class Game:
         self.were_wolf = cls.WereWolf((400, 0), self)
         #self.all_entities.add(self.were_wolf)
 
-        n = 0
+        n = 1
 
         for i in range(n):
             position = (400, 0)

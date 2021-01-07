@@ -156,6 +156,8 @@ class IgneousBall(Projectile):
     damage = 20
 
     def __init__(self, position, direction, game, sprite_route='resources/images/sprites/IgneousBall.png'):
+        if IgneousBall.damage > 20:
+            sprite_route = IgneousBallModifier.change_appearance
         Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = IgneousBall.damage
         
@@ -170,6 +172,13 @@ class IgneousBall(Projectile):
             # The Igneous ball will hit only the enemies in the all entities group
             if not isinstance(enemy, Player):
                 enemy.health -= self.damage
+                self.kill()
+
+        # Collision with special enemies (Werewolf's vipers)
+        collision_ls = pg.sprite.spritecollide(self, self.game.were_wolf_vipers, False)
+        for viper in collision_ls:
+            if isinstance(viper, Viper):
+                viper.health -= self.damage
                 self.kill()
 
         # Collision with EnemyIgneousBall
@@ -363,8 +372,11 @@ class Character(pg.sprite.Sprite):
 
     def check_health(self):
         # Check if the character is still alive, if the health is less than zero it dies
-        if self.health < 0:
+        if self.health <= 0:
             self.kill()
+        
+        if self.health > 0:
+            self.draw_health()
 
     def update(self):
         self.gravity()
@@ -408,9 +420,7 @@ class Character(pg.sprite.Sprite):
                 self.vely = 0
                 self.on_ground = False
         
-        self.check_health()
-        if self.health > 0:
-            self.draw_health()       
+        self.check_health()       
 
 
 class Player(Character):
@@ -626,8 +636,10 @@ class Dragon(Harpy):
 
 
 class Viper(Character):
-    def __init__(self, position, game=None, sprite_route='resources/images/sprites/Viper.png'):
+    def __init__(self, position, game=None, health = 100,sprite_route='resources/images/sprites/Viper.png'):
         Character.__init__(self, position, game, sprite_route)
+        self.health = health
+        self.max_health = self.health
         self.jump_distance = -12
         self.cool_down_jump = lib.FPS * 2
         self.jump_counter = random.randint(0, self.cool_down_jump)
@@ -675,15 +687,17 @@ class Golem(Character):
 class WereWolf(Character):
     def __init__(self, position, game=None, sprite_route='resources/images/sprites/WereWolf.png'):
         Character.__init__(self, position, game, sprite_route)
-        self.viper_limit = 5
+        self.viper_limit = 3
 
     def invoke(self):
         if len(self.game.were_wolf_vipers) < self.viper_limit:
             position = self.rect.center
-            new_viper = Viper(position, self.game)
+            new_viper = Viper(position, self.game, 25)
             self.game.were_wolf_vipers.add(new_viper)
             print(f"Were-wolf's viper amount {len(self.game.were_wolf_vipers)}")
     
     def update(self):
         self.invoke()
+        if self.health <= 0:
+            self.game.were_wolf_vipers.empty()
         Character.update(self)
