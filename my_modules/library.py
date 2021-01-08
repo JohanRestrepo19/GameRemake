@@ -78,3 +78,9 @@ def load_map(json_route):
             block_counter += 1
 
     return blocks
+
+def draw_text(screen, font, text, color, dimensions, position):
+    font = pg.font.Font(font, dimensions)
+    surface = font.render(text, True, color)
+    rect = surface.get_rect()
+    screen.blit(surface, position)

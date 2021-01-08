@@ -12,6 +12,7 @@ class Game:
         self.screen = pg.display.set_mode((lib.WIDTH, lib.HEIGHT))
         self.clock = pg.time.Clock()
         self.running = True
+        self.player = None
 
     def map_movement(self, *groups):
         # Checking the limits on the x-axis

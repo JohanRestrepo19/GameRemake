@@ -373,6 +373,9 @@ class Character(pg.sprite.Sprite):
     def check_health(self):
         # Check if the character is still alive, if the health is less than zero it dies
         if self.health <= 0:
+            if not isinstance(self, Player):
+                self.game.player.score += self.reward_score
+                print(f'Player score: {self.game.player.score}')
             self.kill()
         
         if self.health > 0:
@@ -433,8 +436,9 @@ class Player(Character):
         self.shot_counter = lib.FPS
         self.cool_down_shot = lib.FPS // 2
 
-    def draw_information(self, position):
-        pass
+    def draw_information(self):
+        score_string = f"Score: {self.score}"
+        lib.draw_text(self.game.screen, None, score_string, lib.BLACK, 44, (0, 0))
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -471,9 +475,9 @@ class Player(Character):
             self.shot_counter += 1
 
     def update(self):
-        # print(f"Player's velocity: ({self.velx}, {self.vely})")
         self.velx = 0
         self.move()
+        self.draw_information()
         Character.update(self)
         self.shoot()
 
