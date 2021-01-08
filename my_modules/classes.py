@@ -590,6 +590,7 @@ class Dragon(Harpy):
         self.health = 200
         # The dragon boss is always heading to the left
         self.direction = 1
+        self.reward_score = 100
 
     def check_health(self):
         # Check if the character is still alive, if the health is less than zero it dies
@@ -677,6 +678,7 @@ class Golem(Character):
         Character.__init__(self, position, game, sprite_route)
         self.cool_down_shot = lib.FPS
         self.shot_counter = self.cool_down_shot
+        self.reward_score = 25
 
     def shoot(self):        
         if self.shot_counter > self.cool_down_shot:
@@ -704,6 +706,7 @@ class WereWolf(Character):
     def __init__(self, position, game=None, sprite_route='resources/images/sprites/WereWolf.png'):
         Character.__init__(self, position, game, sprite_route)
         self.viper_limit = 3
+        self.reward_score = 100
 
     def invoke(self):
         if len(self.game.were_wolf_vipers) < self.viper_limit:

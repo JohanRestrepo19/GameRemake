@@ -50,7 +50,7 @@ class Game:
         '''Creation of all groups'''
         # Must be replaced by load_map function
         self.all_entities = pg.sprite.Group()
-        self.blocks = lib.load_map('tiled/level01.json')
+        self.blocks = lib.load_map('tiled/level01.json')  
         self.modifiers = pg.sprite.Group()
         self.projectiles = pg.sprite.Group()
         self.were_wolf_vipers = pg.sprite.Group()
