@@ -49,46 +49,30 @@ class Game:
         # start a new game
         '''Creation of all groups'''
         # Must be replaced by load_map function
-        self.all_entities = pg.sprite.Group()
-        self.blocks = lib.load_map(map_json)
+        groups_dc = lib.load_map(map_json, self)
+
+        self.all_entities = groups_dc['all_entities']
+        self.blocks = groups_dc['blocks']
+        self.spikes = groups_dc['spikes']
+        self.modifiers = groups_dc['modifiers']
+        self.projectiles = groups_dc['projectiles']
+        self.were_wolf_vipers = groups_dc['were_wolf_vipers']
+
+
+        '''self.all_entities = pg.sprite.Group()
+        self.blocks = pg.sprite.Group()
         self.modifiers = pg.sprite.Group()
         self.projectiles = pg.sprite.Group()
-        self.were_wolf_vipers = pg.sprite.Group()
+        self.were_wolf_vipers = pg.sprite.Group()'''
 
         '''Creating objects and add them to their corresponding group'''
         self.taster = cls.Taster((300, 0), self, lib.GREEN)
         self.all_entities.add(self.taster)
 
-        self.modifier = cls.IgneousBallModifier((150, 150), self)
-        self.modifiers.add(self.modifier)
-
         self.player = cls.Player((300, 0), self)
         self.all_entities.add(self.player)
 
-        self.igneous_ball = cls.IgneousBall((200, 200), 2, self)
-        #self.projectiles.add(self.igneous_ball)
 
-        self.harpy = cls.Harpy((200, 200), self)
-        self.all_entities.add(self.harpy)
-
-        self.dragon = cls.Dragon((600, 30), self)
-        self.all_entities.add(self.dragon)
-
-        self.viper = cls.Viper((400, 0), self)
-        self.all_entities.add(self.viper)
-
-        self.golem = cls.Golem((400, 0), self)
-        self.all_entities.add(self.golem)
-
-        self.were_wolf = cls.WereWolf((400, 0), self)
-        #self.all_entities.add(self.were_wolf)
-
-        n = 1
-
-        for i in range(n):
-            position = (400, 0)
-            self.occultist = cls.Occultist(position, self)
-            self.all_entities.add(self.occultist)
 
         self.run()
 
@@ -119,13 +103,15 @@ class Game:
         self.modifiers.update()
         self.projectiles.update()
         self.blocks.update()
+        self.spikes.update()
         self.were_wolf_vipers.update()
-        self.map_movement(self.all_entities, self.modifiers, self.projectiles, self.blocks, self.were_wolf_vipers)
+        self.map_movement(self.all_entities, self.modifiers, self.projectiles, self.blocks, self.spikes, self.were_wolf_vipers)
 
     def draw(self):
         # Game loop - draw
         self.all_entities.draw(self.screen)
         self.blocks.draw(self.screen)
+        self.spikes.draw(self.screen)
         self.modifiers.draw(self.screen)
         self.projectiles.draw(self.screen)
         self.were_wolf_vipers.draw(self.screen)
