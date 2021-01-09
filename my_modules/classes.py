@@ -382,6 +382,8 @@ class Character(pg.sprite.Sprite):
         self.gravity()
         self.move()
         self.sprite_animation()
+        self.check_health()
+
 
 
         self.rect.x += self.velx
@@ -419,8 +421,6 @@ class Character(pg.sprite.Sprite):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
                 self.on_ground = False
-
-        self.check_health()
 
 
 class Player(Character):

@@ -58,18 +58,11 @@ class Game:
         self.projectiles = groups_dc['projectiles']
         self.were_wolf_vipers = groups_dc['were_wolf_vipers']
 
-
-        '''self.all_entities = pg.sprite.Group()
-        self.blocks = pg.sprite.Group()
-        self.modifiers = pg.sprite.Group()
-        self.projectiles = pg.sprite.Group()
-        self.were_wolf_vipers = pg.sprite.Group()'''
-
         '''Creating objects and add them to their corresponding group'''
-        self.taster = cls.Taster((300, 0), self, lib.GREEN)
+        self.taster = cls.Taster((300, 100), self, lib.GREEN)
         self.all_entities.add(self.taster)
 
-        self.player = cls.Player((300, 0), self)
+        self.player = cls.Player((300, 300), self)
         self.all_entities.add(self.player)
 
 
