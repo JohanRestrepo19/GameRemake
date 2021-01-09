@@ -92,10 +92,7 @@ class Spike(Block):
         Block.__init__(self, position, sprite_route, sprite_position)
         self.sprite_mx = lib.crop_image(sprite_route, 2, 1)
         self.image = self.sprite_mx[sprite_position[0]][sprite_position[1]]
-        self.damage = 1
-
-    def get_damage(self):
-        return self.damage
+        self.collision_damage = 1
 
 
 class Projectile(pg.sprite.Sprite):
@@ -114,7 +111,7 @@ class Projectile(pg.sprite.Sprite):
         self.velocity = 4
         self.velx, self.vely = 0, 0
         self.damage = Projectile.damage
-    
+
     def get_damage(self):
         return self.damage
 
@@ -139,7 +136,7 @@ class Projectile(pg.sprite.Sprite):
         self.move()
         self.sprite_draw()
 
-        '''Blocks collision'''
+        '''Blocks and spikes collision'''
         # Check if projectile collides with any block and then kills it
         collision_ls = pg.sprite.spritecollide(self, self.game.blocks, False)
         if collision_ls:
@@ -160,7 +157,7 @@ class IgneousBall(Projectile):
             sprite_route = IgneousBallModifier.change_appearance
         Projectile.__init__(self, position, direction, game, sprite_route)
         self.damage = IgneousBall.damage
-        
+
     def update(self):
         Projectile.update(self)
 
@@ -323,9 +320,9 @@ class Character(pg.sprite.Sprite):
 
         if health_percent < 0 or health_percent > 100:
             raise Exception(f'The health_percent must be a value between 0 and 100. The value of health_percent was {health_percent}')
-        
+
         # Drawing the red rectangle
-        
+
         rect_init_pos = (self.rect.centerx - rect_width // 2, self.rect.top - rect_height)
         rect_dimension = (rect_width, rect_height)
         rect_ls = [rect_init_pos, rect_dimension]
@@ -377,7 +374,7 @@ class Character(pg.sprite.Sprite):
                 self.game.player.score += self.reward_score
                 print(f'Player score: {self.game.player.score}')
             self.kill()
-        
+
         if self.health > 0:
             self.draw_health()
 
@@ -385,7 +382,7 @@ class Character(pg.sprite.Sprite):
         self.gravity()
         self.move()
         self.sprite_animation()
-        
+
 
         self.rect.x += self.velx
         # Check collision on the x-axis
@@ -422,8 +419,8 @@ class Character(pg.sprite.Sprite):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
                 self.on_ground = False
-        
-        self.check_health()       
+
+        self.check_health()
 
 
 class Player(Character):
@@ -484,10 +481,14 @@ class Player(Character):
         '''Check collision with normal enemies'''
         collision_ls = pg.sprite.spritecollide(self, self.game.all_entities, False)
         for enemy in collision_ls:
-            if not isinstance(enemy, (Player, Block, Modifier, IgneousBall, Dragon, WereWolf, Taster)):
+            if not isinstance(enemy, (Player, Dragon, WereWolf, Taster)):
                 self.health -= enemy.collision_damage
                 # self.set_health(self.get_health() - enemy.get_collision_damage())
                 print(f"Player's health {self.health}")
+        '''Check collision with spikes'''
+        collision_ls = pg.sprite.spritecollide(self, self.game.spikes, False)
+        for spike in collision_ls:
+            self.health -= spike.collision_damage
 
         '''Check collision with modifiers'''
         collision_ls = pg.sprite.spritecollide(self, self.game.modifiers, True)
@@ -578,7 +579,7 @@ class Harpy(Character):
             if (self.rect.top <= block.rect.bottom) and (self.vely < 0):
                 self.rect.top = block.rect.bottom
                 self.vely = 0
-        
+
         Character.check_health(self)
 
 
@@ -599,7 +600,7 @@ class Dragon(Harpy):
             igneous_ball_modifier = IgneousBallModifier((self.rect.x + 20, self.rect.y), self.game)
             self.game.modifiers.add(health_modifier, igneous_ball_modifier)
             self.kill()
-        
+
         if self.health > 0:
             self.draw_health()
 
@@ -667,7 +668,7 @@ class Viper(Character):
             self.vely = self.jump_distance
         else:
             self.jump_counter += 1
-    
+
     def update(self):
         self.jump()
         Character.update(self)
@@ -680,7 +681,7 @@ class Golem(Character):
         self.shot_counter = self.cool_down_shot
         self.reward_score = 25
 
-    def shoot(self):        
+    def shoot(self):
         if self.shot_counter > self.cool_down_shot:
             self.shot_counter = 0
             if self.velx > 0:
@@ -688,7 +689,7 @@ class Golem(Character):
                 direction = 2
                 new_igneous_ball = EnemyIgneousBall(position, direction, self.game)
                 self.game.projectiles.add(new_igneous_ball)
-            
+
             if self.velx < 0:
                 position = (self.rect.left, self.rect.y)
                 direction = 1
@@ -714,7 +715,7 @@ class WereWolf(Character):
             new_viper = Viper(position, self.game, 25)
             self.game.were_wolf_vipers.add(new_viper)
             print(f"Were-wolf's viper amount {len(self.game.were_wolf_vipers)}")
-    
+
     def update(self):
         self.invoke()
         if self.health <= 0:
