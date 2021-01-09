@@ -44,13 +44,13 @@ class Game:
             for group in groups:
                 for entity in group:
                     entity.rect.y -= abs(self.player.vely)
-            
-    def new(self):
+
+    def new(self, map_json):
         # start a new game
         '''Creation of all groups'''
         # Must be replaced by load_map function
         self.all_entities = pg.sprite.Group()
-        self.blocks = lib.load_map('tiled/level01.json')  
+        self.blocks = lib.load_map(map_json)
         self.modifiers = pg.sprite.Group()
         self.projectiles = pg.sprite.Group()
         self.were_wolf_vipers = pg.sprite.Group()
@@ -76,7 +76,7 @@ class Game:
 
         self.viper = cls.Viper((400, 0), self)
         self.all_entities.add(self.viper)
-        
+
         self.golem = cls.Golem((400, 0), self)
         self.all_entities.add(self.golem)
 
@@ -143,7 +143,7 @@ def main():
     game.show_start_screen()
 
     while game.running:
-        game.new()
+        game.new('tiled/level01.json')
 
         game.show_game_over_screen()
 
